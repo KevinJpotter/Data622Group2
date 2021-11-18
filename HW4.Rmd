@@ -49,6 +49,7 @@ library(psych)
 library(xgboost)
 library(ParBayesianOptimization)
 library(factoextra)
+library(kernlab)
 set.seed(622)
 ```
 
@@ -73,7 +74,7 @@ AZ | Non-substance-related Dx |  0 - none; 1 - one; 2 - More than one
 BA | Substance-related Dx |  0 - none; 1 - one Substance-related; 2 - two; 3 - three or more  
 BB | Psychiatric Meds |  0 - none; 1 - one psychotropic med; 2 - more than one psychotropic med  
 
-Notice how the data is grouped with ADHD, Mood disorders, and Individual Substance misuse present across a range of columns. These groups are reviewed throughout the exploration process and new features are generated to attempt to improve model performance. 
+Notice how the data is grouped. There are labels for ADHD, Mood disorders, and Individual Substance misuse across a range of columns. These groups are reviewed throughout the exploration process and new features are generated to attempt to improve model performance. 
 
 ## Data Characteristics
 
@@ -84,7 +85,6 @@ adhd_data <- read_excel("ADHD_data.xlsx", sheet = "Data") %>% na_if("") %>% dply
 #df <- adhd_data[,2:53]
 adhd_data[,2:53] <- lapply(adhd_data[,2:53], factor)
 adhd_data.dims <- dim(adhd_data)
-adhd_data.dims[[2]]
 ```
 
 The data contains `r adhd_data.dims[[1]]` observations of `r adhd_data.dims[[2]]` variables. We import the data from a remote repository and find that 51 of the variables should be of the factor data type given clear levels in their distributions. As is, these variables are interpreted as character strings. This will need to be converted for realistic results. The remaining variables can be numeric for our purposes. 
@@ -94,7 +94,11 @@ We review one grouped variable set, known as mood disorders (MD), to show what w
 ```{r md-data}
 adhd_data[,c(23:37)]
 ```
+
 Each part of Q1 'a' through 'm' corresponds with a specific question related to mood disorders for a single patient. In our feature engineering, it may be useful to tally these responses for a more holistic perspective of the patient's overall mood. We repeat this for the other groups to get an sense of the patient well-being which should provide insight into their risk of suicide.   
+
+We examine the distribution of responses. This will inform us if there are any questions that are overly represented, missing values, or in need of adjustments or transformations prior to modeling. Assuming that we factorize responses with clear levels, we visualize the results as bars for each level of each variable.  
+
 
 ```{r, cat-bar, fig.length =20, fig.width=10}
 # select categorical columns
@@ -109,7 +113,15 @@ ggplot(adhd_factm, aes(x = value)) +
   theme(legend.position = "none")
 ```
 
+The distributions of these values are spread somewhat evenly and should not require transformation at first glance. It is also clear that there are some missing values with various drug abuse reponses such as THC, Cocaine, Stimulants, Opioids, and more. 'Pschy Meds' med is clearly missing the most values, with nearly all of its values listed as 'NA.' Since there are few missing values relative to the number of observations in the dataset, any basic imputation method should limit the effect on our predictions. 
+
+We can visually tell that the data leans in certain directions which may influence how generalizable our results can be. For example, responses only include two racial groups are included. 
+Adjustments may be necessary for some sub groups, for example in the responses of those with drug use, but the data are otherwise ready for use. 
+
+
+
 ## Data summary
+
 
 
 ```{r adhd_data_summary}
@@ -285,7 +297,7 @@ In this transformation, we would first use dummyVars to create dummy variables f
 
 ```{r transform}
 set.seed(622)
-
+1
 # create dummy variables for categorical features
 adhd_dummy <- dummyVars(Suicide ~ ., data = adhd_newdata) 
 adhd_dummy <- predict(adhd_dummy, newdata=adhd_newdata)
