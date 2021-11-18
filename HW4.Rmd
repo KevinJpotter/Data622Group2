@@ -632,6 +632,17 @@ summary(svm_resamps)
 
 We can see out Support Vector Machine Linear, Radial, and Poly fit had median accuracy rates of .631, .769 and .769 respectively indicating of radial or poly SVM should be chosen for future modeling.
 
+**Most Important Features**
+
+We can see most Important features came out from the SVM are Abuse, Alcohol and MD Factor 1. 
+
+```{r top-imp}
+# Important features
+imp_vars <- varImp(svm_rad_fit, scale=FALSE)
+plot(imp_vars, top=10)
+```
+
+
 ## Gradient Boosted 
 
 We use the information from the above function to fit our final model, make predictions, and evaluate results.
