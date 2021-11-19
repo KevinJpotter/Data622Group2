@@ -841,7 +841,7 @@ We can see that model Gradient Boosted model has the best accuracy at 77.5% when
 
 # Conclusion
 
-Through the use of feature engineering and different models we can see that there are numerous ways to approach a dataset such as this. Both models were better at predicting when a patient would not attempt to commit suicide, and not nearly as good at predicting when a patient would. Going forward it would be best to modify the model to focus on predicting when someone would attempt suicide. It is much more beneficial given the problem at hand to be over cautious and less accurate then to be more accurate but less cautious. Potentially using principle components could improve the model and focusing on feature engineering in regards to "positive" cases where the patient atttempted suicide.
+Through the use of feature engineering and different models we can see that there are numerous ways to approach a dataset such as this. Both models were better at predicting when a patient would not attempt to commit suicide, and not nearly as good at predicting when a patient would. Going forward it would be best to modify the model to focus on predicting when someone would attempt suicide. It is much more beneficial given the problem at hand to be over cautious and less accurate then to be more accurate but less cautious. Potentially using principle components could improve the model and focusing on feature engineering in regards to "positive" cases where the patient attempted suicide.
 
 
 
