@@ -3,6 +3,9 @@ title: "Data622 - Group2 - Homework4"
 author: "Zachary Palmore, Kevin Potter, Amit Kapoor, Adam Gersowitz, Paul Perez"
 date: "10/21/2021"
 output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
   html_document:
     fig_width: 15
     highlight: pygments
@@ -10,9 +13,6 @@ output:
     theme: flatly
     toc: yes
     toc_float: yes
-  pdf_document:
-    latex_engine: xelatex
-    toc: yes
 ---
 
 
@@ -832,7 +832,7 @@ We can see that model Gradient Boosted model has the best accuracy at 77.5% when
          XGB = conf.mat.xgboost.overall) %>% 
   t() %>%
   kbl(booktabs =  T, caption = "Model Performance") %>% 
-  kable_styling(latex_options = c("striped, HOLD_position"), full_width = F) %>%
+  kable_styling(latex_options = c("striped", "HOLD_position"), full_width = F) %>%
   footnote(c(
     "Variables from PCA & factor analysis considered in model performance evaluation"
   ))
