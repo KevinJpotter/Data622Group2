@@ -815,7 +815,7 @@ This produced an accuracy rate of 77.5%
 
 # Model Performance
 
-We can see that model Gradient Boosted model has the best accuracy at 77.5% when applied to the test dataset. We could improve these models through more through feature selection via PCA or other methods and by focusing on feature engineering by using what was identified by these methods.
+We can see that model Gradient Boosted model has the best accuracy at 77.5% when applied to the test dataset. The Models shorthand names are K-nearest neighbor (KNN), Hierarchical Clustering (HC), linear support vector machine (LIN), radial support vector machine (RAD), polynomial support vector machine (PLY), and the gradient XGBoosted model (XGB). We could improve these models through more through feature selection via PCA or other methods and by focusing on feature engineering by using what was identified by these methods.
 
 ```{r}
 (round(data.frame(conf.mat.knn$overall, 
