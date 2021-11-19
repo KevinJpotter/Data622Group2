@@ -6,13 +6,6 @@ output:
   pdf_document:
     latex_engine: xelatex
     toc: yes
-  html_document:
-    fig_width: 15
-    highlight: pygments
-    number_sections: no
-    theme: flatly
-    toc: yes
-    toc_float: yes
 ---
 
 
