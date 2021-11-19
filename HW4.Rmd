@@ -227,7 +227,7 @@ head(adhd_newdata)
 ```
 
 
-```{r}
+```{r dim-red}
 adhd_newdata.dims <- dim(adhd_newdata)
 dim_reduced <- (53-25)/53
 ```
@@ -613,7 +613,7 @@ Our KNN model accuracy comes out to `r round(conf.mat.knn$overall[[1]], 3)*100`%
 In this we use a special kind of K-means method where we attempt to identify clear grouping of factors and their respective levels across the dataset. To do this we isolate those factors, center and scale the values, and focus on the mean  euclidean distances between values. This method assumes there is an inherent similarity across values in the dataset including similarities with our target variable. The goal is to use these similarities (should there be any) to identify the groups closest to our target. If there are any groups, we would assume that they contain the patients who are at the highest risk of attempting suicide. Based on the data characteristics and summary from our EDA, we should not expect much from this model but it should prove informative.  
 
 
-```{r}
+```{r clus-2}
 set.seed(622)
 # Clean up training data
 training_factors <- training %>% 
@@ -650,7 +650,7 @@ heir_model
 ```
 
 
-```{r}
+```{r eval-model}
 # Evaluate Model
 plot(heir_model)
 heir_predict <- predict(heir_model, newdata = test_heir)
@@ -665,7 +665,7 @@ Our k value was experimentally determined to be significantly smaller for this m
 
 In this we use a special kind of unsupervised learning method where we attempt to identify clear orders of factor and their respective levels across the dataset. To do this we isolate those factors, center and scale the values, remove our target from the data set, and review the results. Perhaps the easiest way to do this is with a dendrogram, as shown below. 
 
-```{r}
+```{r hclus}
 set.seed(622)
 
 # Clean up training data
@@ -817,7 +817,7 @@ This produced an accuracy rate of 77.5%
 
 We can see that model Gradient Boosted model has the best accuracy at 77.5% when applied to the test dataset. The Models shorthand names are K-nearest neighbor (KNN), Hierarchical Clustering (HC), linear support vector machine (LIN), radial support vector machine (RAD), polynomial support vector machine (PLY), and the gradient XGBoosted model (XGB). We could improve these models through more through feature selection via PCA or other methods and by focusing on feature engineering by using what was identified by these methods.
 
-```{r}
+```{r model-perf}
 (round(data.frame(conf.mat.knn$overall, 
                   conf.mat.heir$overall,
                   conf.mat.svnlin$overall, 
