@@ -3942,13 +3942,13 @@ MD Q3
 ## 6:     2         6        10         1.000000 0.5000000 0.5294463       TRUE
 ## 7:     3         7        10         1.000000 0.2500000 0.3537376       TRUE
 ##    inBounds Elapsed    Score nrounds errorMessage
-## 1:     TRUE    0.18 0.500000       1           NA
-## 2:     TRUE    0.05 0.500000       1           NA
-## 3:     TRUE    0.14 0.722162      24           NA
-## 4:     TRUE    0.03 0.500000       1           NA
-## 5:     TRUE    0.16 0.732463      22           NA
-## 6:     TRUE    0.15 0.762502      16           NA
-## 7:     TRUE    0.05 0.646280       2           NA</code></pre>
+## 1:     TRUE    0.08 0.500000       1           NA
+## 2:     TRUE    0.03 0.500000       1           NA
+## 3:     TRUE    0.19 0.722162      24           NA
+## 4:     TRUE    0.05 0.500000       1           NA
+## 5:     TRUE    0.22 0.732463      22           NA
+## 6:     TRUE    0.16 0.762502      16           NA
+## 7:     TRUE    0.03 0.646280       2           NA</code></pre>
 <pre><code>## $max_depth
 ## [1] 10
 ## 
@@ -3963,8 +3963,8 @@ MD Q3
 <div id="build-models" class="section level1">
 <h1>Build Models</h1>
 <p>We develop three main models including a K-Clustering Method, Gradient Boosting method, and Support Vector Machines (SVM). Each focuses on a particular strategy. Our clustering attempts to identify groups of variables that are similar and use them to assess a patient’s risk of attempting suicide. Gradient Boosting constructs decision trees with an emphasis on returning the most accurate decision path and our Support Vector Machine uses linear regression to classify the factors into groups using hyperplanes and by assessing the classes likelihood of being our target variable.</p>
-<div id="clustering-method" class="section level2">
-<h2>Clustering Method</h2>
+<div id="k-clustering-method" class="section level2">
+<h2>K-Clustering Method</h2>
 <p>We use K-nearest neighbor (KNN) to identify clusters of patients that share similar patterns that could help us predict our target variable. KNN works by identifying the “k” closest neighbors in the dataset. This works particularly well for classification of factorized data, as our dataset happens to be. Results of this model’s construction are shown below.</p>
 <pre><code>## [1] &lt;NA&gt;
 ## Levels: 0 1 2</code></pre>
@@ -4038,6 +4038,45 @@ MD Q3
 ## </code></pre>
 <p>Our KNN model accuracy comes out to 72.1%. We note that the ideal number of k was experimentally determined by running through several simulated model and testing the accuracy of each. The most accurate model was our final choice.</p>
 </div>
+<div id="hierarchical-clustering" class="section level2">
+<h2>Hierarchical Clustering</h2>
+<pre><code>## k-Nearest Neighbors 
+## 
+## 45 samples
+## 49 predictors
+##  2 classes: &#39;0&#39;, &#39;1&#39; 
+## 
+## Pre-processing: centered (140), scaled (140) 
+## Resampling: Cross-Validated (10 fold, repeated 5 times) 
+## Summary of sample sizes: 41, 40, 41, 41, 41, 40, ... 
+## Resampling results across tuning parameters:
+## 
+##   k   Accuracy  Kappa       
+##    5  0.694      0.200559441
+##    7  0.686      0.126666667
+##    9  0.672      0.080303030
+##   11  0.671      0.046969697
+##   13  0.638     -0.051515152
+##   15  0.644     -0.049090909
+##   17  0.643     -0.048484848
+##   19  0.657     -0.027878788
+##   21  0.662     -0.021212121
+##   23  0.670     -0.006666667
+##   25  0.675      0.000000000
+##   27  0.675      0.000000000
+##   29  0.675      0.000000000
+##   31  0.675      0.000000000
+##   33  0.675      0.000000000
+##   35  0.675      0.000000000
+##   37  0.675      0.000000000
+##   39  0.675      0.000000000
+##   41  0.675      0.000000000
+##   43  0.675      0.000000000
+## 
+## Accuracy was used to select the optimal model using the largest value.
+## The final value used for the model was k = 5.</code></pre>
+<p><img src="data:image/png;base64,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" width="960" style="display: block; margin: auto;" /></p>
+</div>
 <div id="support-vector-machine" class="section level2">
 <h2>Support Vector Machine</h2>
 <p>The objective of the support vector machine algorithm is to find a hyperplane in an N-dimensional space (N being the number of features) that classifies the data points. Hyperplanes are decision boundaries to classify the data points. Data points that fall on either side of the hyperplane can qualify as different classes. Support vectors are data points that are closer to the hyperplane and effect the position and orientation of the hyperplane. Using these support vectors, we maximize the margin of the classifier.</p>
@@ -4102,6 +4141,210 @@ MD Q3
 <div id="model-performance" class="section level1">
 <h1>Model Performance</h1>
 <p>We can see that model Gradient Boosted model has the best accuracy at 77.5% when applied to the test dataset. We could improve these models through more through feature selection via PCA or other methods and by focusing on feature engineering by using what was identified by these methods.</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<caption>
+Model Performance
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+conf.mat.knn.overall
+</th>
+<th style="text-align:right;">
+conf.mat.heir.overall
+</th>
+<th style="text-align:right;">
+conf.mat.svnlin.overall
+</th>
+<th style="text-align:right;">
+conf.mat.svnrad.overall
+</th>
+<th style="text-align:right;">
+conf.mat.svnpoly.overall
+</th>
+<th style="text-align:right;">
+conf.mat.xgboost.overall
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Accuracy
+</td>
+<td style="text-align:right;">
+0.721
+</td>
+<td style="text-align:right;">
+0.600
+</td>
+<td style="text-align:right;">
+0.674
+</td>
+<td style="text-align:right;">
+0.744
+</td>
+<td style="text-align:right;">
+0.744
+</td>
+<td style="text-align:right;">
+0.800
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kappa
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+-0.250
+</td>
+<td style="text-align:right;">
+0.230
+</td>
+<td style="text-align:right;">
+0.311
+</td>
+<td style="text-align:right;">
+0.311
+</td>
+<td style="text-align:right;">
+0.412
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AccuracyLower
+</td>
+<td style="text-align:right;">
+0.563
+</td>
+<td style="text-align:right;">
+0.262
+</td>
+<td style="text-align:right;">
+0.515
+</td>
+<td style="text-align:right;">
+0.588
+</td>
+<td style="text-align:right;">
+0.588
+</td>
+<td style="text-align:right;">
+0.644
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AccuracyUpper
+</td>
+<td style="text-align:right;">
+0.847
+</td>
+<td style="text-align:right;">
+0.878
+</td>
+<td style="text-align:right;">
+0.809
+</td>
+<td style="text-align:right;">
+0.865
+</td>
+<td style="text-align:right;">
+0.865
+</td>
+<td style="text-align:right;">
+0.909
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AccuracyNull
+</td>
+<td style="text-align:right;">
+0.721
+</td>
+<td style="text-align:right;">
+0.800
+</td>
+<td style="text-align:right;">
+0.721
+</td>
+<td style="text-align:right;">
+0.721
+</td>
+<td style="text-align:right;">
+0.721
+</td>
+<td style="text-align:right;">
+0.700
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AccuracyPValue
+</td>
+<td style="text-align:right;">
+0.577
+</td>
+<td style="text-align:right;">
+0.967
+</td>
+<td style="text-align:right;">
+0.804
+</td>
+<td style="text-align:right;">
+0.442
+</td>
+<td style="text-align:right;">
+0.442
+</td>
+<td style="text-align:right;">
+0.111
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+McnemarPValue
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+0.789
+</td>
+<td style="text-align:right;">
+0.546
+</td>
+<td style="text-align:right;">
+0.546
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<span style="font-style: italic;">Note: </span>
+</td>
+</tr>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Variables from PCA &amp; factor analysis considered in model performance evaluation
+</td>
+</tr>
+</tfoot>
+</table>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
@@ -4117,374 +4360,428 @@ MD Q3
 </div>
 <div id="code-appendix" class="section level1">
 <h1>Code Appendix</h1>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo=</span><span class="cn">FALSE</span>, <span class="at">error=</span><span class="cn">FALSE</span>, <span class="at">warning=</span><span class="cn">FALSE</span>, <span class="at">message=</span><span class="cn">FALSE</span>, <span class="at">fig.align=</span><span class="st">&quot;center&quot;</span>, <span class="at">fig.width =</span> <span class="dv">10</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Libraries</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(summarytools)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tree)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools)</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xgboost)</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ParBayesianOptimization)</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co"># read data</span></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>adhd_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;ADHD_data.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;Data&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">na_if</span>(<span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="co">#columns &lt;- list(dimnames(adhd_data)[2])</span></span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#df &lt;- adhd_data[,2:53]</span></span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>adhd_data[,<span class="dv">2</span><span class="sc">:</span><span class="dv">53</span>] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(adhd_data[,<span class="dv">2</span><span class="sc">:</span><span class="dv">53</span>], factor)</span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>adhd_data.dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(adhd_data)</span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)]</span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co"># select categorical columns</span></span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>cat_cols <span class="ot">&lt;-</span> <span class="fu">dimnames</span>(adhd_data[,<span class="dv">2</span><span class="sc">:</span><span class="dv">53</span>])[[<span class="dv">2</span>]]</span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>adhd_fact <span class="ot">&lt;-</span>  adhd_data[cat_cols]</span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a><span class="co"># long format</span></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>adhd_factm <span class="ot">&lt;-</span> <span class="fu">melt</span>(adhd_fact, <span class="at">measure.vars =</span> cat_cols, <span class="at">variable.name =</span> <span class="st">&#39;metric&#39;</span>, <span class="at">value.name =</span> <span class="st">&#39;value&#39;</span>)</span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="co"># plot categorical columns</span></span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(adhd_factm, <span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span> </span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> metric)) <span class="sc">+</span> </span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>( <span class="sc">~</span> metric, <span class="at">nrow =</span> 5L, <span class="at">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dfSummary</span>(adhd_data, <span class="at">style =</span> <span class="st">&#39;grid&#39;</span>, <span class="at">graph.col =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>adhds <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>)], as.numeric) <span class="sc">%&gt;%</span> <span class="fu">cor</span>()</span>
-<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(adhds, <span class="at">method=</span><span class="st">&quot;number&quot;</span>)</span>
-<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>mds <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)], as.numeric) <span class="sc">%&gt;%</span> <span class="fu">cor</span>()</span>
-<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(mds, <span class="at">method=</span><span class="st">&quot;number&quot;</span>)</span>
-<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>adhd_ques_fa <span class="ot">&lt;-</span> <span class="fu">factanal</span>(<span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>)], as.numeric), </span>
-<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>                         <span class="at">factors =</span> <span class="dv">3</span>, </span>
-<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>                         <span class="at">rotation =</span> <span class="st">&quot;promax&quot;</span>, </span>
-<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>                         <span class="at">scores =</span> <span class="st">&quot;regression&quot;</span>)</span>
-<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>adhd_ques_fa</span>
-<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.diagram</span>(adhd_ques_fa<span class="sc">$</span>loadings)</span>
-<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>md_ques_fa <span class="ot">&lt;-</span> <span class="fu">factanal</span>(<span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)], as.numeric), </span>
-<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>                         <span class="at">factors =</span> <span class="dv">3</span>, </span>
-<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>                         <span class="at">rotation =</span> <span class="st">&quot;promax&quot;</span>, </span>
-<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>                         <span class="at">scores =</span> <span class="st">&quot;regression&quot;</span>)</span>
-<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>md_ques_fa</span>
-<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.diagram</span>(md_ques_fa<span class="sc">$</span>loadings)</span>
-<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a><span class="co"># ADHD question scores dataframe</span></span>
-<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>adhd_ques_fa <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adhd_ques_fa<span class="sc">$</span>scores) </span>
-<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(adhd_ques_fa) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;ADHD_FACT1&#39;</span>,<span class="st">&#39;ADHD_FACT2&#39;</span>,<span class="st">&#39;ADHD_FACT3&#39;</span>)</span>
-<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a><span class="co"># MD questions scores dataframe</span></span>
-<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>md_ques_fa <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(md_ques_fa<span class="sc">$</span>scores)</span>
-<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(md_ques_fa) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;MD_FACT1&#39;</span>,<span class="st">&#39;MD_FACT2&#39;</span>,<span class="st">&#39;MD_FACT3&#39;</span>)</span>
-<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a><span class="co"># remove ADHD and MD columns</span></span>
-<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> adhd_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="fu">starts_with</span>(<span class="st">&#39;ADHD Q&#39;</span>), <span class="fu">starts_with</span>(<span class="st">&#39;MD Q&#39;</span>)))</span>
-<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Add new factor columns created</span></span>
-<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> <span class="fu">cbind</span>(adhd_newdata, adhd_ques_fa, md_ques_fa)</span>
-<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adhd_newdata)</span>
-<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>adhd_newdata.dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(adhd_newdata)</span>
-<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>dim_reduced <span class="ot">&lt;-</span> (<span class="dv">53-25</span>)<span class="sc">/</span><span class="dv">53</span></span>
-<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a><span class="co"># plot missing values</span></span>
-<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing</span>(adhd_newdata)</span>
-<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a><span class="co"># rename columns to apply mice</span></span>
-<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> adhd_newdata <span class="sc">%&gt;%</span> </span>
-<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&#39;ADHD_Total&#39;</span><span class="ot">=</span><span class="st">&#39;ADHD Total&#39;</span>,</span>
-<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;MD_Total&#39;</span><span class="ot">=</span><span class="st">&#39;MD TOTAL&#39;</span>,</span>
-<span id="cb23-78"><a href="#cb23-78" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Sedative_hypnotics&#39;</span><span class="ot">=</span><span class="st">&#39;Sedative-hypnotics&#39;</span>, </span>
-<span id="cb23-79"><a href="#cb23-79" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Court_order&#39;</span> <span class="ot">=</span> <span class="st">&#39;Court order&#39;</span>, </span>
-<span id="cb23-80"><a href="#cb23-80" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Hx_of_Violence&#39;</span><span class="ot">=</span><span class="st">&#39;Hx of Violence&#39;</span>, </span>
-<span id="cb23-81"><a href="#cb23-81" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Disorderly_Conduct&#39;</span><span class="ot">=</span><span class="st">&#39;Disorderly Conduct&#39;</span>, </span>
-<span id="cb23-82"><a href="#cb23-82" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Non_subst_Dx&#39;</span><span class="ot">=</span><span class="st">&#39;Non-subst Dx&#39;</span>,</span>
-<span id="cb23-83"><a href="#cb23-83" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Subst_Dx&#39;</span><span class="ot">=</span><span class="st">&#39;Subst Dx&#39;</span>, </span>
-<span id="cb23-84"><a href="#cb23-84" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Psych_meds&#39;</span><span class="ot">=</span><span class="st">&#39;Psych meds.&#39;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-85"><a href="#cb23-85" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Psych_meds)</span>
-<span id="cb23-86"><a href="#cb23-86" aria-hidden="true" tabindex="-1"></a><span class="co"># select columns with non missing values</span></span>
-<span id="cb23-87"><a href="#cb23-87" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> adhd_newdata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="fu">starts_with</span>(<span class="st">&#39;ADHD_&#39;</span>), <span class="fu">starts_with</span>(<span class="st">&#39;MD_&#39;</span>), <span class="st">&#39;Race&#39;</span>, <span class="st">&#39;Sex&#39;</span>, <span class="st">&#39;Age&#39;</span>))</span>
-<span id="cb23-88"><a href="#cb23-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-89"><a href="#cb23-89" aria-hidden="true" tabindex="-1"></a><span class="co"># impute predictors using mice</span></span>
-<span id="cb23-90"><a href="#cb23-90" aria-hidden="true" tabindex="-1"></a>adhd_impute <span class="ot">&lt;-</span> adhd_newdata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="fu">starts_with</span>(<span class="st">&#39;ADHD_&#39;</span>), <span class="fu">starts_with</span>(<span class="st">&#39;MD_&#39;</span>), <span class="st">&#39;Race&#39;</span>, <span class="st">&#39;Sex&#39;</span>, <span class="st">&#39;Age&#39;</span>))</span>
-<span id="cb23-91"><a href="#cb23-91" aria-hidden="true" tabindex="-1"></a>adhd_impute <span class="ot">&lt;-</span> <span class="fu">complete</span>(<span class="fu">mice</span>(<span class="at">data=</span>adhd_impute, <span class="at">print=</span><span class="cn">FALSE</span>))</span>
-<span id="cb23-92"><a href="#cb23-92" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(adhd_impute)</span>
-<span id="cb23-93"><a href="#cb23-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Merged the imputed dataframe with temp</span></span>
-<span id="cb23-94"><a href="#cb23-94" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> <span class="fu">cbind</span>(adhd_impute, temp)</span>
-<span id="cb23-95"><a href="#cb23-95" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adhd_newdata)</span>
-<span id="cb23-96"><a href="#cb23-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out </span></span>
-<span id="cb23-97"><a href="#cb23-97" aria-hidden="true" tabindex="-1"></a><span class="co">#adhd_data &lt;- adhd_data %&gt;% filter(!is.na(Alcohol) &amp;</span></span>
-<span id="cb23-98"><a href="#cb23-98" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(THC) &amp;</span></span>
-<span id="cb23-99"><a href="#cb23-99" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Cocaine) &amp;</span></span>
-<span id="cb23-100"><a href="#cb23-100" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Stimulants) &amp;</span></span>
-<span id="cb23-101"><a href="#cb23-101" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Sedative-hypnotics`) &amp;</span></span>
-<span id="cb23-102"><a href="#cb23-102" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Opioids) &amp;</span></span>
-<span id="cb23-103"><a href="#cb23-103" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Court order`) &amp;</span></span>
-<span id="cb23-104"><a href="#cb23-104" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Education) &amp;</span></span>
-<span id="cb23-105"><a href="#cb23-105" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Hx of Violence`) &amp;</span></span>
-<span id="cb23-106"><a href="#cb23-106" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Disorderly Conduct`) &amp;</span></span>
-<span id="cb23-107"><a href="#cb23-107" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Suicide) &amp;</span></span>
-<span id="cb23-108"><a href="#cb23-108" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Abuse) &amp;</span></span>
-<span id="cb23-109"><a href="#cb23-109" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Non-subst Dx`) &amp;</span></span>
-<span id="cb23-110"><a href="#cb23-110" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Subst Dx`) &amp;</span></span>
-<span id="cb23-111"><a href="#cb23-111" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Psych meds.`))</span></span>
-<span id="cb23-112"><a href="#cb23-112" aria-hidden="true" tabindex="-1"></a><span class="co"># impute numeric predictors using mice</span></span>
-<span id="cb23-113"><a href="#cb23-113" aria-hidden="true" tabindex="-1"></a><span class="co">#adhd_data &lt;- complete(mice(data=adhd_data[,:53], method=&quot;pmm&quot;, print=FALSE))</span></span>
-<span id="cb23-114"><a href="#cb23-114" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
-<span id="cb23-115"><a href="#cb23-115" aria-hidden="true" tabindex="-1"></a><span class="co"># create dummy variables for categorical features</span></span>
-<span id="cb23-116"><a href="#cb23-116" aria-hidden="true" tabindex="-1"></a>adhd_dummy <span class="ot">&lt;-</span> <span class="fu">dummyVars</span>(Suicide <span class="sc">~</span> ., <span class="at">data =</span> adhd_newdata) </span>
-<span id="cb23-117"><a href="#cb23-117" aria-hidden="true" tabindex="-1"></a>adhd_dummy <span class="ot">&lt;-</span> <span class="fu">predict</span>(adhd_dummy, <span class="at">newdata=</span>adhd_newdata)</span>
-<span id="cb23-118"><a href="#cb23-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-119"><a href="#cb23-119" aria-hidden="true" tabindex="-1"></a><span class="co"># center and scaling</span></span>
-<span id="cb23-120"><a href="#cb23-120" aria-hidden="true" tabindex="-1"></a>adhd_transformed <span class="ot">&lt;-</span> adhd_dummy <span class="sc">%&gt;%</span> </span>
-<span id="cb23-121"><a href="#cb23-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">preProcess</span>(<span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-122"><a href="#cb23-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(adhd_dummy) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-123"><a href="#cb23-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
-<span id="cb23-124"><a href="#cb23-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-125"><a href="#cb23-125" aria-hidden="true" tabindex="-1"></a><span class="co"># add Suicide column</span></span>
-<span id="cb23-126"><a href="#cb23-126" aria-hidden="true" tabindex="-1"></a>adhd_transformed<span class="sc">$</span>Suicide <span class="ot">&lt;-</span> adhd_newdata<span class="sc">$</span>Suicide</span>
-<span id="cb23-127"><a href="#cb23-127" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adhd_transformed)</span>
-<span id="cb23-128"><a href="#cb23-128" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
-<span id="cb23-129"><a href="#cb23-129" aria-hidden="true" tabindex="-1"></a>partition <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(adhd_data<span class="sc">$</span>Suicide, <span class="at">p=</span><span class="fl">0.75</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb23-130"><a href="#cb23-130" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> adhd_data[partition,]</span>
-<span id="cb23-131"><a href="#cb23-131" aria-hidden="true" tabindex="-1"></a>testing <span class="ot">&lt;-</span> adhd_data[<span class="sc">-</span>partition,]</span>
-<span id="cb23-132"><a href="#cb23-132" aria-hidden="true" tabindex="-1"></a><span class="co"># training/validation partition for independent variables</span></span>
-<span id="cb23-133"><a href="#cb23-133" aria-hidden="true" tabindex="-1"></a><span class="co">#X.train &lt;- ld.clean[partition, ] %&gt;% dplyr::select(-Loan_Status)</span></span>
-<span id="cb23-134"><a href="#cb23-134" aria-hidden="true" tabindex="-1"></a><span class="co">#X.test &lt;- ld.clean[-partition, ] %&gt;% dplyr::select(-Loan_Status)</span></span>
-<span id="cb23-135"><a href="#cb23-135" aria-hidden="true" tabindex="-1"></a><span class="co"># training/validation partition for dependent variable Loan_Status</span></span>
-<span id="cb23-136"><a href="#cb23-136" aria-hidden="true" tabindex="-1"></a><span class="co">#y.train &lt;- ld.clean$Loan_Status[partition]</span></span>
-<span id="cb23-137"><a href="#cb23-137" aria-hidden="true" tabindex="-1"></a><span class="co">#y.test &lt;- ld.clean$Loan_Status[-partition]</span></span>
-<span id="cb23-138"><a href="#cb23-138" aria-hidden="true" tabindex="-1"></a><span class="co"># create subset of ADHD Questions for PCA</span></span>
-<span id="cb23-139"><a href="#cb23-139" aria-hidden="true" tabindex="-1"></a>adhd_ques_pca <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>)], as.numeric)</span>
-<span id="cb23-140"><a href="#cb23-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-141"><a href="#cb23-141" aria-hidden="true" tabindex="-1"></a><span class="co"># create subset of MD Questions for PCA</span></span>
-<span id="cb23-142"><a href="#cb23-142" aria-hidden="true" tabindex="-1"></a>md_ques_pca <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)], as.numeric)</span>
-<span id="cb23-143"><a href="#cb23-143" aria-hidden="true" tabindex="-1"></a>pca_adhd <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(adhd_ques_pca, <span class="at">scale. =</span> <span class="cn">TRUE</span>, <span class="at">center=</span><span class="cn">TRUE</span>)</span>
-<span id="cb23-144"><a href="#cb23-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-145"><a href="#cb23-145" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(adhd_ques_pca, pca_adhd<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-146"><a href="#cb23-146" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>(<span class="at">booktabs =</span> T, <span class="at">caption =</span><span class="st">&quot;ADHD Correlations&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-147"><a href="#cb23-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>), <span class="at">full_width =</span> F) </span>
-<span id="cb23-148"><a href="#cb23-148" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_adhd)</span>
-<span id="cb23-149"><a href="#cb23-149" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_adhd)</span>
-<span id="cb23-150"><a href="#cb23-150" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC2</span></span>
-<span id="cb23-151"><a href="#cb23-151" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_adhd, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
-<span id="cb23-152"><a href="#cb23-152" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_adhd,</span>
-<span id="cb23-153"><a href="#cb23-153" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span><span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
-<span id="cb23-154"><a href="#cb23-154" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
-<span id="cb23-155"><a href="#cb23-155" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
-<span id="cb23-156"><a href="#cb23-156" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
-<span id="cb23-157"><a href="#cb23-157" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb23-158"><a href="#cb23-158" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC3</span></span>
-<span id="cb23-159"><a href="#cb23-159" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_adhd, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
-<span id="cb23-160"><a href="#cb23-160" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_adhd,</span>
-<span id="cb23-161"><a href="#cb23-161" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
-<span id="cb23-162"><a href="#cb23-162" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
-<span id="cb23-163"><a href="#cb23-163" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
-<span id="cb23-164"><a href="#cb23-164" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)</span>
-<span id="cb23-165"><a href="#cb23-165" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb23-166"><a href="#cb23-166" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC2 and PC3</span></span>
-<span id="cb23-167"><a href="#cb23-167" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_adhd, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
-<span id="cb23-168"><a href="#cb23-168" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_adhd,</span>
-<span id="cb23-169"><a href="#cb23-169" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
-<span id="cb23-170"><a href="#cb23-170" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
-<span id="cb23-171"><a href="#cb23-171" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
-<span id="cb23-172"><a href="#cb23-172" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)</span>
-<span id="cb23-173"><a href="#cb23-173" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb23-174"><a href="#cb23-174" aria-hidden="true" tabindex="-1"></a>pca_md <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(md_ques_pca, <span class="at">scale. =</span> <span class="cn">TRUE</span>, <span class="at">center=</span><span class="cn">TRUE</span>)</span>
-<span id="cb23-175"><a href="#cb23-175" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(md_ques_pca, pca_md<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-176"><a href="#cb23-176" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>(<span class="at">booktabs =</span> T, <span class="at">caption =</span><span class="st">&quot;md Correlations&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-177"><a href="#cb23-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>), <span class="at">full_width =</span> F) </span>
-<span id="cb23-178"><a href="#cb23-178" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_md)</span>
-<span id="cb23-179"><a href="#cb23-179" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_md)</span>
-<span id="cb23-180"><a href="#cb23-180" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC2</span></span>
-<span id="cb23-181"><a href="#cb23-181" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_md, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
-<span id="cb23-182"><a href="#cb23-182" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_md,</span>
-<span id="cb23-183"><a href="#cb23-183" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span><span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
-<span id="cb23-184"><a href="#cb23-184" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
-<span id="cb23-185"><a href="#cb23-185" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
-<span id="cb23-186"><a href="#cb23-186" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
-<span id="cb23-187"><a href="#cb23-187" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb23-188"><a href="#cb23-188" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC3</span></span>
-<span id="cb23-189"><a href="#cb23-189" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_md, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
-<span id="cb23-190"><a href="#cb23-190" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_md,</span>
-<span id="cb23-191"><a href="#cb23-191" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
-<span id="cb23-192"><a href="#cb23-192" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
-<span id="cb23-193"><a href="#cb23-193" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
-<span id="cb23-194"><a href="#cb23-194" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)</span>
-<span id="cb23-195"><a href="#cb23-195" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb23-196"><a href="#cb23-196" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC2 and PC3</span></span>
-<span id="cb23-197"><a href="#cb23-197" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_md, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
-<span id="cb23-198"><a href="#cb23-198" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_md,</span>
-<span id="cb23-199"><a href="#cb23-199" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
-<span id="cb23-200"><a href="#cb23-200" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
-<span id="cb23-201"><a href="#cb23-201" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
-<span id="cb23-202"><a href="#cb23-202" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)</span>
-<span id="cb23-203"><a href="#cb23-203" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb23-204"><a href="#cb23-204" aria-hidden="true" tabindex="-1"></a>gb__train <span class="ot">&lt;-</span><span class="fu">subset</span>(training[<span class="fu">complete.cases</span>(training<span class="sc">$</span>Suicide), ], <span class="at">select=</span> <span class="sc">-</span><span class="st">`</span><span class="at">Non-subst Dx</span><span class="st">`</span>)</span>
-<span id="cb23-205"><a href="#cb23-205" aria-hidden="true" tabindex="-1"></a>gb__test <span class="ot">&lt;-</span><span class="fu">subset</span>(testing[<span class="fu">complete.cases</span>(testing<span class="sc">$</span>Suicide), ], <span class="at">select=</span> <span class="sc">-</span><span class="st">`</span><span class="at">Non-subst Dx</span><span class="st">`</span>)</span>
-<span id="cb23-206"><a href="#cb23-206" aria-hidden="true" tabindex="-1"></a>y_label_tr <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(gb__train<span class="sc">$</span>Suicide)</span>
-<span id="cb23-207"><a href="#cb23-207" aria-hidden="true" tabindex="-1"></a>y_label_test <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(gb__test<span class="sc">$</span>Suicide)</span>
-<span id="cb23-208"><a href="#cb23-208" aria-hidden="true" tabindex="-1"></a>gb__train <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">subset</span>(gb__train, <span class="at">select =</span> <span class="sc">-</span>Suicide), as.numeric)</span>
-<span id="cb23-209"><a href="#cb23-209" aria-hidden="true" tabindex="-1"></a>gb_test <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">subset</span>(gb__test, <span class="at">select =</span> <span class="sc">-</span>Suicide), as.numeric)</span>
-<span id="cb23-210"><a href="#cb23-210" aria-hidden="true" tabindex="-1"></a>Folds <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb23-211"><a href="#cb23-211" aria-hidden="true" tabindex="-1"></a>    <span class="at">Fold1 =</span> <span class="fu">as.integer</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(gb__train),<span class="at">by =</span> <span class="dv">3</span>))</span>
-<span id="cb23-212"><a href="#cb23-212" aria-hidden="true" tabindex="-1"></a>  , <span class="at">Fold2 =</span> <span class="fu">as.integer</span>(<span class="fu">seq</span>(<span class="dv">2</span>,<span class="fu">nrow</span>(gb__train),<span class="at">by =</span> <span class="dv">3</span>))</span>
-<span id="cb23-213"><a href="#cb23-213" aria-hidden="true" tabindex="-1"></a>  , <span class="at">Fold3 =</span> <span class="fu">as.integer</span>(<span class="fu">seq</span>(<span class="dv">3</span>,<span class="fu">nrow</span>(gb__train),<span class="at">by =</span> <span class="dv">3</span>))</span>
-<span id="cb23-214"><a href="#cb23-214" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-215"><a href="#cb23-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-216"><a href="#cb23-216" aria-hidden="true" tabindex="-1"></a>scoringFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(max_depth, min_child_weight, subsample) {</span>
-<span id="cb23-217"><a href="#cb23-217" aria-hidden="true" tabindex="-1"></a>  dtrain <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(gb__train, <span class="at">label=</span>y_label_tr)</span>
-<span id="cb23-218"><a href="#cb23-218" aria-hidden="true" tabindex="-1"></a>  Pars <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
-<span id="cb23-219"><a href="#cb23-219" aria-hidden="true" tabindex="-1"></a>      <span class="at">booster =</span> <span class="st">&quot;gbtree&quot;</span></span>
-<span id="cb23-220"><a href="#cb23-220" aria-hidden="true" tabindex="-1"></a>    , <span class="at">eta =</span> <span class="fl">0.01</span></span>
-<span id="cb23-221"><a href="#cb23-221" aria-hidden="true" tabindex="-1"></a>    , <span class="at">max_depth =</span> max_depth</span>
-<span id="cb23-222"><a href="#cb23-222" aria-hidden="true" tabindex="-1"></a>    , <span class="at">min_child_weight =</span> min_child_weight</span>
-<span id="cb23-223"><a href="#cb23-223" aria-hidden="true" tabindex="-1"></a>    , <span class="at">subsample =</span> subsample</span>
-<span id="cb23-224"><a href="#cb23-224" aria-hidden="true" tabindex="-1"></a>    , <span class="at">objective =</span> <span class="st">&quot;binary:logistic&quot;</span></span>
-<span id="cb23-225"><a href="#cb23-225" aria-hidden="true" tabindex="-1"></a>    , <span class="at">eval_metric =</span> <span class="st">&quot;auc&quot;</span></span>
-<span id="cb23-226"><a href="#cb23-226" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb23-227"><a href="#cb23-227" aria-hidden="true" tabindex="-1"></a>  xgbcv <span class="ot">&lt;-</span> <span class="fu">xgb.cv</span>(</span>
-<span id="cb23-228"><a href="#cb23-228" aria-hidden="true" tabindex="-1"></a>      <span class="at">params =</span> Pars</span>
-<span id="cb23-229"><a href="#cb23-229" aria-hidden="true" tabindex="-1"></a>    , <span class="at">data =</span> dtrain</span>
-<span id="cb23-230"><a href="#cb23-230" aria-hidden="true" tabindex="-1"></a>    , <span class="at">nround =</span> <span class="dv">100</span></span>
-<span id="cb23-231"><a href="#cb23-231" aria-hidden="true" tabindex="-1"></a>    , <span class="at">folds =</span> Folds</span>
-<span id="cb23-232"><a href="#cb23-232" aria-hidden="true" tabindex="-1"></a>    , <span class="at">prediction =</span> <span class="cn">TRUE</span></span>
-<span id="cb23-233"><a href="#cb23-233" aria-hidden="true" tabindex="-1"></a>    , <span class="at">showsd =</span> <span class="cn">TRUE</span></span>
-<span id="cb23-234"><a href="#cb23-234" aria-hidden="true" tabindex="-1"></a>    , <span class="at">early_stopping_rounds =</span> <span class="dv">5</span></span>
-<span id="cb23-235"><a href="#cb23-235" aria-hidden="true" tabindex="-1"></a>    , <span class="at">maximize =</span> <span class="cn">TRUE</span></span>
-<span id="cb23-236"><a href="#cb23-236" aria-hidden="true" tabindex="-1"></a>            , <span class="at">verbose =</span> <span class="dv">0</span>)</span>
-<span id="cb23-237"><a href="#cb23-237" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
-<span id="cb23-238"><a href="#cb23-238" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>( </span>
-<span id="cb23-239"><a href="#cb23-239" aria-hidden="true" tabindex="-1"></a>        <span class="at">Score =</span> <span class="fu">max</span>(xgbcv<span class="sc">$</span>evaluation_log<span class="sc">$</span>test_auc_mean)</span>
-<span id="cb23-240"><a href="#cb23-240" aria-hidden="true" tabindex="-1"></a>      , <span class="at">nrounds =</span> xgbcv<span class="sc">$</span>best_iteration</span>
-<span id="cb23-241"><a href="#cb23-241" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb23-242"><a href="#cb23-242" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb23-243"><a href="#cb23-243" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-244"><a href="#cb23-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-245"><a href="#cb23-245" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">50</span>)</span>
-<span id="cb23-246"><a href="#cb23-246" aria-hidden="true" tabindex="-1"></a>bounds <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
-<span id="cb23-247"><a href="#cb23-247" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_depth =</span> <span class="fu">c</span>(2L, 10L)</span>
-<span id="cb23-248"><a href="#cb23-248" aria-hidden="true" tabindex="-1"></a>  , <span class="at">min_child_weight =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">25</span>)</span>
-<span id="cb23-249"><a href="#cb23-249" aria-hidden="true" tabindex="-1"></a>  , <span class="at">subsample =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, .<span class="dv">5</span>)</span>
-<span id="cb23-250"><a href="#cb23-250" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-251"><a href="#cb23-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-252"><a href="#cb23-252" aria-hidden="true" tabindex="-1"></a>optObj <span class="ot">&lt;-</span> <span class="fu">bayesOpt</span>(</span>
-<span id="cb23-253"><a href="#cb23-253" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> scoringFunction</span>
-<span id="cb23-254"><a href="#cb23-254" aria-hidden="true" tabindex="-1"></a>  , <span class="at">bounds =</span> bounds</span>
-<span id="cb23-255"><a href="#cb23-255" aria-hidden="true" tabindex="-1"></a>  , <span class="at">initPoints =</span> <span class="dv">4</span></span>
-<span id="cb23-256"><a href="#cb23-256" aria-hidden="true" tabindex="-1"></a>  , <span class="at">iters.n =</span> <span class="dv">3</span></span>
-<span id="cb23-257"><a href="#cb23-257" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-258"><a href="#cb23-258" aria-hidden="true" tabindex="-1"></a>optObj<span class="sc">$</span>scoreSummary</span>
-<span id="cb23-259"><a href="#cb23-259" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">getBestPars</span>(optObj))</span>
-<span id="cb23-260"><a href="#cb23-260" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
-<span id="cb23-261"><a href="#cb23-261" aria-hidden="true" tabindex="-1"></a>mode <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
-<span id="cb23-262"><a href="#cb23-262" aria-hidden="true" tabindex="-1"></a>  levels <span class="ot">&lt;-</span> <span class="fu">unique</span>(x)</span>
-<span id="cb23-263"><a href="#cb23-263" aria-hidden="true" tabindex="-1"></a>  indicies <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(x, levels))</span>
-<span id="cb23-264"><a href="#cb23-264" aria-hidden="true" tabindex="-1"></a>  levels[<span class="fu">which.max</span>(indicies)]</span>
-<span id="cb23-265"><a href="#cb23-265" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-266"><a href="#cb23-266" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up training data</span></span>
-<span id="cb23-267"><a href="#cb23-267" aria-hidden="true" tabindex="-1"></a>training_factors <span class="ot">&lt;-</span> training <span class="sc">%&gt;%</span> </span>
-<span id="cb23-268"><a href="#cb23-268" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Age, <span class="sc">-</span><span class="st">`</span><span class="at">ADHD Total</span><span class="st">`</span>, <span class="st">`</span><span class="at">MD TOTAL</span><span class="st">`</span>) </span>
-<span id="cb23-269"><a href="#cb23-269" aria-hidden="true" tabindex="-1"></a>training_factors <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">lapply</span>(training_factors, as.factor))</span>
-<span id="cb23-270"><a href="#cb23-270" aria-hidden="true" tabindex="-1"></a>train_knn <span class="ot">&lt;-</span> training_factors <span class="sc">%&gt;%</span> </span>
-<span id="cb23-271"><a href="#cb23-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="fu">mode</span>(.))))</span>
-<span id="cb23-272"><a href="#cb23-272" aria-hidden="true" tabindex="-1"></a><span class="fu">mode</span>(train_knn<span class="sc">$</span>Psych.meds.) </span>
-<span id="cb23-273"><a href="#cb23-273" aria-hidden="true" tabindex="-1"></a>train_knn<span class="sc">$</span>Psych.meds.[<span class="fu">which</span>(<span class="fu">is.na</span>(train_knn<span class="sc">$</span>Psych.meds.))] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb23-274"><a href="#cb23-274" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(train_knn<span class="sc">$</span>Psych.meds.))</span>
-<span id="cb23-275"><a href="#cb23-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-276"><a href="#cb23-276" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up testing data</span></span>
-<span id="cb23-277"><a href="#cb23-277" aria-hidden="true" tabindex="-1"></a>testing_factors <span class="ot">&lt;-</span> testing <span class="sc">%&gt;%</span> </span>
-<span id="cb23-278"><a href="#cb23-278" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Age, <span class="sc">-</span><span class="st">`</span><span class="at">ADHD Total</span><span class="st">`</span>, <span class="st">`</span><span class="at">MD TOTAL</span><span class="st">`</span>) </span>
-<span id="cb23-279"><a href="#cb23-279" aria-hidden="true" tabindex="-1"></a>testing_factors <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">lapply</span>(testing_factors, as.factor))</span>
-<span id="cb23-280"><a href="#cb23-280" aria-hidden="true" tabindex="-1"></a>test_knn <span class="ot">&lt;-</span> testing_factors <span class="sc">%&gt;%</span> </span>
-<span id="cb23-281"><a href="#cb23-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="fu">mode</span>(.))))</span>
-<span id="cb23-282"><a href="#cb23-282" aria-hidden="true" tabindex="-1"></a><span class="fu">mode</span>(test_knn<span class="sc">$</span>Psych.meds.) </span>
-<span id="cb23-283"><a href="#cb23-283" aria-hidden="true" tabindex="-1"></a>test_knn<span class="sc">$</span>Psych.meds.[<span class="fu">which</span>(<span class="fu">is.na</span>(test_knn<span class="sc">$</span>Psych.meds.))] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb23-284"><a href="#cb23-284" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(test_knn<span class="sc">$</span>Psych.meds.))</span>
-<span id="cb23-285"><a href="#cb23-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-286"><a href="#cb23-286" aria-hidden="true" tabindex="-1"></a><span class="co"># Train KNN model</span></span>
-<span id="cb23-287"><a href="#cb23-287" aria-hidden="true" tabindex="-1"></a>train.knn <span class="ot">&lt;-</span> (train_knn[, <span class="fu">names</span>(train_knn) <span class="sc">!=</span> <span class="st">&quot;Suicide&quot;</span>])</span>
-<span id="cb23-288"><a href="#cb23-288" aria-hidden="true" tabindex="-1"></a>prep <span class="ot">&lt;-</span> <span class="fu">preProcess</span>(<span class="at">x =</span> train.knn, <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>))</span>
-<span id="cb23-289"><a href="#cb23-289" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">&quot;repeatedcv&quot;</span>, <span class="at">repeats =</span> <span class="dv">5</span>) </span>
-<span id="cb23-290"><a href="#cb23-290" aria-hidden="true" tabindex="-1"></a>knn_model <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., <span class="at">data =</span> train_knn, </span>
-<span id="cb23-291"><a href="#cb23-291" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;knn&quot;</span>, </span>
-<span id="cb23-292"><a href="#cb23-292" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> cl, </span>
-<span id="cb23-293"><a href="#cb23-293" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>), </span>
-<span id="cb23-294"><a href="#cb23-294" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">20</span>)</span>
-<span id="cb23-295"><a href="#cb23-295" aria-hidden="true" tabindex="-1"></a>knn_model </span>
-<span id="cb23-296"><a href="#cb23-296" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate Model</span></span>
-<span id="cb23-297"><a href="#cb23-297" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(knn_model)</span>
-<span id="cb23-298"><a href="#cb23-298" aria-hidden="true" tabindex="-1"></a>knn_predict <span class="ot">&lt;-</span> <span class="fu">predict</span>(knn_model, <span class="at">newdata =</span> test_knn)</span>
-<span id="cb23-299"><a href="#cb23-299" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(knn_predict <span class="sc">==</span> test_knn<span class="sc">$</span>Suicide) <span class="co"># accuracy</span></span>
-<span id="cb23-300"><a href="#cb23-300" aria-hidden="true" tabindex="-1"></a>conf.mat.knn <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(knn_predict, test_knn<span class="sc">$</span>Suicide)</span>
-<span id="cb23-301"><a href="#cb23-301" aria-hidden="true" tabindex="-1"></a>accuracy <span class="ot">&lt;-</span> <span class="fu">round</span>(conf.mat.knn<span class="sc">$</span>overall[[<span class="dv">1</span>]], <span class="dv">3</span>)<span class="sc">*</span><span class="dv">100</span></span>
-<span id="cb23-302"><a href="#cb23-302" aria-hidden="true" tabindex="-1"></a>conf.mat.knn</span>
-<span id="cb23-303"><a href="#cb23-303" aria-hidden="true" tabindex="-1"></a><span class="co"># partitioning for train and test</span></span>
-<span id="cb23-304"><a href="#cb23-304" aria-hidden="true" tabindex="-1"></a>partition <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(adhd_transformed<span class="sc">$</span>Suicide, <span class="at">p=</span><span class="fl">0.75</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb23-305"><a href="#cb23-305" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> adhd_transformed[partition,]</span>
-<span id="cb23-306"><a href="#cb23-306" aria-hidden="true" tabindex="-1"></a>testing <span class="ot">&lt;-</span> adhd_transformed[<span class="sc">-</span>partition,]</span>
-<span id="cb23-307"><a href="#cb23-307" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
-<span id="cb23-308"><a href="#cb23-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-309"><a href="#cb23-309" aria-hidden="true" tabindex="-1"></a><span class="co"># fit with svmLinear</span></span>
-<span id="cb23-310"><a href="#cb23-310" aria-hidden="true" tabindex="-1"></a>svm_lin_fit <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., </span>
-<span id="cb23-311"><a href="#cb23-311" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> training, </span>
-<span id="cb23-312"><a href="#cb23-312" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;svmLinear&quot;</span>,</span>
-<span id="cb23-313"><a href="#cb23-313" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>),</span>
-<span id="cb23-314"><a href="#cb23-314" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">5</span>,</span>
-<span id="cb23-315"><a href="#cb23-315" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>))</span>
-<span id="cb23-316"><a href="#cb23-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-317"><a href="#cb23-317" aria-hidden="true" tabindex="-1"></a>pred_lin_suicide <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm_lin_fit, testing)</span>
-<span id="cb23-318"><a href="#cb23-318" aria-hidden="true" tabindex="-1"></a>cm_lin <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing<span class="sc">$</span>Suicide, pred_lin_suicide)</span>
-<span id="cb23-319"><a href="#cb23-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-320"><a href="#cb23-320" aria-hidden="true" tabindex="-1"></a><span class="co"># fit with svmRadial</span></span>
-<span id="cb23-321"><a href="#cb23-321" aria-hidden="true" tabindex="-1"></a>svm_rad_fit <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., </span>
-<span id="cb23-322"><a href="#cb23-322" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> training, </span>
-<span id="cb23-323"><a href="#cb23-323" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</span>
-<span id="cb23-324"><a href="#cb23-324" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>),</span>
-<span id="cb23-325"><a href="#cb23-325" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">5</span>,</span>
-<span id="cb23-326"><a href="#cb23-326" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>))</span>
-<span id="cb23-327"><a href="#cb23-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-328"><a href="#cb23-328" aria-hidden="true" tabindex="-1"></a>pred_rad_suicide <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm_rad_fit, testing)</span>
-<span id="cb23-329"><a href="#cb23-329" aria-hidden="true" tabindex="-1"></a>cm_rad <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing<span class="sc">$</span>Suicide, pred_rad_suicide)</span>
-<span id="cb23-330"><a href="#cb23-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-331"><a href="#cb23-331" aria-hidden="true" tabindex="-1"></a><span class="co"># fit with svmPoly</span></span>
-<span id="cb23-332"><a href="#cb23-332" aria-hidden="true" tabindex="-1"></a>svm_poly_fit <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., </span>
-<span id="cb23-333"><a href="#cb23-333" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> training, </span>
-<span id="cb23-334"><a href="#cb23-334" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;svmPoly&quot;</span>,</span>
-<span id="cb23-335"><a href="#cb23-335" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>),</span>
-<span id="cb23-336"><a href="#cb23-336" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">5</span>,</span>
-<span id="cb23-337"><a href="#cb23-337" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>))</span>
-<span id="cb23-338"><a href="#cb23-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-339"><a href="#cb23-339" aria-hidden="true" tabindex="-1"></a>pred_poly_suicide <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm_poly_fit, testing)</span>
-<span id="cb23-340"><a href="#cb23-340" aria-hidden="true" tabindex="-1"></a>cm_poly <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing<span class="sc">$</span>Suicide, pred_poly_suicide)</span>
-<span id="cb23-341"><a href="#cb23-341" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-342"><a href="#cb23-342" aria-hidden="true" tabindex="-1"></a><span class="co">#Compare 3 models:</span></span>
-<span id="cb23-343"><a href="#cb23-343" aria-hidden="true" tabindex="-1"></a>svm_resamps <span class="ot">&lt;-</span> <span class="fu">resamples</span>(<span class="fu">list</span>(<span class="at">Linear =</span> svm_lin_fit, <span class="at">Radial =</span> svm_rad_fit, <span class="at">Poly =</span> svm_poly_fit))</span>
-<span id="cb23-344"><a href="#cb23-344" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svm_resamps)</span>
-<span id="cb23-345"><a href="#cb23-345" aria-hidden="true" tabindex="-1"></a><span class="co"># Important features</span></span>
-<span id="cb23-346"><a href="#cb23-346" aria-hidden="true" tabindex="-1"></a>imp_vars <span class="ot">&lt;-</span> <span class="fu">varImp</span>(svm_rad_fit, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
-<span id="cb23-347"><a href="#cb23-347" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(imp_vars, <span class="at">top=</span><span class="dv">10</span>)</span>
-<span id="cb23-348"><a href="#cb23-348" aria-hidden="true" tabindex="-1"></a>dtrain <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(gb__train, <span class="at">label=</span>y_label_tr)</span>
-<span id="cb23-349"><a href="#cb23-349" aria-hidden="true" tabindex="-1"></a>dtest <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(gb_test, <span class="at">label=</span>y_label_test)</span>
-<span id="cb23-350"><a href="#cb23-350" aria-hidden="true" tabindex="-1"></a>xgb <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(</span>
-<span id="cb23-351"><a href="#cb23-351" aria-hidden="true" tabindex="-1"></a>      <span class="at">params =</span> <span class="fu">list</span>( </span>
-<span id="cb23-352"><a href="#cb23-352" aria-hidden="true" tabindex="-1"></a>                  <span class="at">booster =</span> <span class="st">&quot;gbtree&quot;</span></span>
-<span id="cb23-353"><a href="#cb23-353" aria-hidden="true" tabindex="-1"></a>                , <span class="at">eta =</span> <span class="fl">0.01</span></span>
-<span id="cb23-354"><a href="#cb23-354" aria-hidden="true" tabindex="-1"></a>                , <span class="at">max_depth =</span> <span class="dv">10</span></span>
-<span id="cb23-355"><a href="#cb23-355" aria-hidden="true" tabindex="-1"></a>                , <span class="at">min_child_weight =</span> <span class="dv">1</span></span>
-<span id="cb23-356"><a href="#cb23-356" aria-hidden="true" tabindex="-1"></a>                , <span class="at">subsample =</span> .<span class="dv">5</span></span>
-<span id="cb23-357"><a href="#cb23-357" aria-hidden="true" tabindex="-1"></a>                , <span class="at">objective =</span> <span class="st">&quot;binary:logistic&quot;</span></span>
-<span id="cb23-358"><a href="#cb23-358" aria-hidden="true" tabindex="-1"></a>                , <span class="at">eval_metric =</span> <span class="st">&quot;auc&quot;</span></span>
-<span id="cb23-359"><a href="#cb23-359" aria-hidden="true" tabindex="-1"></a>              )</span>
-<span id="cb23-360"><a href="#cb23-360" aria-hidden="true" tabindex="-1"></a>    , <span class="at">data =</span> dtrain</span>
-<span id="cb23-361"><a href="#cb23-361" aria-hidden="true" tabindex="-1"></a>    , <span class="at">nround =</span> <span class="dv">100</span></span>
-<span id="cb23-362"><a href="#cb23-362" aria-hidden="true" tabindex="-1"></a>    , <span class="at">maximize =</span> <span class="cn">TRUE</span></span>
-<span id="cb23-363"><a href="#cb23-363" aria-hidden="true" tabindex="-1"></a>            , <span class="at">verbose =</span> <span class="dv">0</span>)</span>
-<span id="cb23-364"><a href="#cb23-364" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-365"><a href="#cb23-365" aria-hidden="true" tabindex="-1"></a>xgbpred <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb,dtest)</span>
-<span id="cb23-366"><a href="#cb23-366" aria-hidden="true" tabindex="-1"></a>xgbpred <span class="ot">&lt;-</span> <span class="fu">ifelse</span> (xgbpred <span class="sc">&gt;</span> <span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb23-367"><a href="#cb23-367" aria-hidden="true" tabindex="-1"></a>y_label_test <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(y_label_test)</span>
-<span id="cb23-368"><a href="#cb23-368" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="fu">table</span>(xgbpred, y_label_test))</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo=</span><span class="cn">FALSE</span>, <span class="at">error=</span><span class="cn">FALSE</span>, <span class="at">warning=</span><span class="cn">FALSE</span>, <span class="at">message=</span><span class="cn">FALSE</span>, <span class="at">fig.align=</span><span class="st">&quot;center&quot;</span>, <span class="at">fig.width =</span> <span class="dv">10</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Libraries</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(summarytools)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tree)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xgboost)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ParBayesianOptimization)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co"># read data</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>adhd_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;ADHD_data.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;Data&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">na_if</span>(<span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#columns &lt;- list(dimnames(adhd_data)[2])</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#df &lt;- adhd_data[,2:53]</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>adhd_data[,<span class="dv">2</span><span class="sc">:</span><span class="dv">53</span>] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(adhd_data[,<span class="dv">2</span><span class="sc">:</span><span class="dv">53</span>], factor)</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>adhd_data.dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(adhd_data)</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)]</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co"># select categorical columns</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>cat_cols <span class="ot">&lt;-</span> <span class="fu">dimnames</span>(adhd_data[,<span class="dv">2</span><span class="sc">:</span><span class="dv">53</span>])[[<span class="dv">2</span>]]</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>adhd_fact <span class="ot">&lt;-</span>  adhd_data[cat_cols]</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="co"># long format</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>adhd_factm <span class="ot">&lt;-</span> <span class="fu">melt</span>(adhd_fact, <span class="at">measure.vars =</span> cat_cols, <span class="at">variable.name =</span> <span class="st">&#39;metric&#39;</span>, <span class="at">value.name =</span> <span class="st">&#39;value&#39;</span>)</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="co"># plot categorical columns</span></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(adhd_factm, <span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span> </span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> metric)) <span class="sc">+</span> </span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>( <span class="sc">~</span> metric, <span class="at">nrow =</span> 5L, <span class="at">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dfSummary</span>(adhd_data, <span class="at">style =</span> <span class="st">&#39;grid&#39;</span>, <span class="at">graph.col =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>adhds <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>)], as.numeric) <span class="sc">%&gt;%</span> <span class="fu">cor</span>()</span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(adhds, <span class="at">method=</span><span class="st">&quot;number&quot;</span>)</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>mds <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)], as.numeric) <span class="sc">%&gt;%</span> <span class="fu">cor</span>()</span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(mds, <span class="at">method=</span><span class="st">&quot;number&quot;</span>)</span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>adhd_ques_fa <span class="ot">&lt;-</span> <span class="fu">factanal</span>(<span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>)], as.numeric), </span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>                         <span class="at">factors =</span> <span class="dv">3</span>, </span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>                         <span class="at">rotation =</span> <span class="st">&quot;promax&quot;</span>, </span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>                         <span class="at">scores =</span> <span class="st">&quot;regression&quot;</span>)</span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>adhd_ques_fa</span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.diagram</span>(adhd_ques_fa<span class="sc">$</span>loadings)</span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a>md_ques_fa <span class="ot">&lt;-</span> <span class="fu">factanal</span>(<span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)], as.numeric), </span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>                         <span class="at">factors =</span> <span class="dv">3</span>, </span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>                         <span class="at">rotation =</span> <span class="st">&quot;promax&quot;</span>, </span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>                         <span class="at">scores =</span> <span class="st">&quot;regression&quot;</span>)</span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>md_ques_fa</span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.diagram</span>(md_ques_fa<span class="sc">$</span>loadings)</span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a><span class="co"># ADHD question scores dataframe</span></span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>adhd_ques_fa <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adhd_ques_fa<span class="sc">$</span>scores) </span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(adhd_ques_fa) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;ADHD_FACT1&#39;</span>,<span class="st">&#39;ADHD_FACT2&#39;</span>,<span class="st">&#39;ADHD_FACT3&#39;</span>)</span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a><span class="co"># MD questions scores dataframe</span></span>
+<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a>md_ques_fa <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(md_ques_fa<span class="sc">$</span>scores)</span>
+<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(md_ques_fa) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;MD_FACT1&#39;</span>,<span class="st">&#39;MD_FACT2&#39;</span>,<span class="st">&#39;MD_FACT3&#39;</span>)</span>
+<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a><span class="co"># remove ADHD and MD columns</span></span>
+<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> adhd_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="fu">starts_with</span>(<span class="st">&#39;ADHD Q&#39;</span>), <span class="fu">starts_with</span>(<span class="st">&#39;MD Q&#39;</span>)))</span>
+<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Add new factor columns created</span></span>
+<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> <span class="fu">cbind</span>(adhd_newdata, adhd_ques_fa, md_ques_fa)</span>
+<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adhd_newdata)</span>
+<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a>adhd_newdata.dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(adhd_newdata)</span>
+<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a>dim_reduced <span class="ot">&lt;-</span> (<span class="dv">53-25</span>)<span class="sc">/</span><span class="dv">53</span></span>
+<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a><span class="co"># plot missing values</span></span>
+<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing</span>(adhd_newdata)</span>
+<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a><span class="co"># rename columns to apply mice</span></span>
+<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> adhd_newdata <span class="sc">%&gt;%</span> </span>
+<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&#39;ADHD_Total&#39;</span><span class="ot">=</span><span class="st">&#39;ADHD Total&#39;</span>,</span>
+<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;MD_Total&#39;</span><span class="ot">=</span><span class="st">&#39;MD TOTAL&#39;</span>,</span>
+<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Sedative_hypnotics&#39;</span><span class="ot">=</span><span class="st">&#39;Sedative-hypnotics&#39;</span>, </span>
+<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Court_order&#39;</span> <span class="ot">=</span> <span class="st">&#39;Court order&#39;</span>, </span>
+<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Hx_of_Violence&#39;</span><span class="ot">=</span><span class="st">&#39;Hx of Violence&#39;</span>, </span>
+<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Disorderly_Conduct&#39;</span><span class="ot">=</span><span class="st">&#39;Disorderly Conduct&#39;</span>, </span>
+<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Non_subst_Dx&#39;</span><span class="ot">=</span><span class="st">&#39;Non-subst Dx&#39;</span>,</span>
+<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Subst_Dx&#39;</span><span class="ot">=</span><span class="st">&#39;Subst Dx&#39;</span>, </span>
+<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a>         <span class="st">&#39;Psych_meds&#39;</span><span class="ot">=</span><span class="st">&#39;Psych meds.&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Psych_meds)</span>
+<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a><span class="co"># select columns with non missing values</span></span>
+<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> adhd_newdata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="fu">starts_with</span>(<span class="st">&#39;ADHD_&#39;</span>), <span class="fu">starts_with</span>(<span class="st">&#39;MD_&#39;</span>), <span class="st">&#39;Race&#39;</span>, <span class="st">&#39;Sex&#39;</span>, <span class="st">&#39;Age&#39;</span>))</span>
+<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a><span class="co"># impute predictors using mice</span></span>
+<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a>adhd_impute <span class="ot">&lt;-</span> adhd_newdata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="fu">starts_with</span>(<span class="st">&#39;ADHD_&#39;</span>), <span class="fu">starts_with</span>(<span class="st">&#39;MD_&#39;</span>), <span class="st">&#39;Race&#39;</span>, <span class="st">&#39;Sex&#39;</span>, <span class="st">&#39;Age&#39;</span>))</span>
+<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a>adhd_impute <span class="ot">&lt;-</span> <span class="fu">complete</span>(<span class="fu">mice</span>(<span class="at">data=</span>adhd_impute, <span class="at">print=</span><span class="cn">FALSE</span>))</span>
+<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(adhd_impute)</span>
+<span id="cb24-93"><a href="#cb24-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Merged the imputed dataframe with temp</span></span>
+<span id="cb24-94"><a href="#cb24-94" aria-hidden="true" tabindex="-1"></a>adhd_newdata <span class="ot">&lt;-</span> <span class="fu">cbind</span>(adhd_impute, temp)</span>
+<span id="cb24-95"><a href="#cb24-95" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adhd_newdata)</span>
+<span id="cb24-96"><a href="#cb24-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out </span></span>
+<span id="cb24-97"><a href="#cb24-97" aria-hidden="true" tabindex="-1"></a><span class="co">#adhd_data &lt;- adhd_data %&gt;% filter(!is.na(Alcohol) &amp;</span></span>
+<span id="cb24-98"><a href="#cb24-98" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(THC) &amp;</span></span>
+<span id="cb24-99"><a href="#cb24-99" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Cocaine) &amp;</span></span>
+<span id="cb24-100"><a href="#cb24-100" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Stimulants) &amp;</span></span>
+<span id="cb24-101"><a href="#cb24-101" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Sedative-hypnotics`) &amp;</span></span>
+<span id="cb24-102"><a href="#cb24-102" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Opioids) &amp;</span></span>
+<span id="cb24-103"><a href="#cb24-103" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Court order`) &amp;</span></span>
+<span id="cb24-104"><a href="#cb24-104" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Education) &amp;</span></span>
+<span id="cb24-105"><a href="#cb24-105" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Hx of Violence`) &amp;</span></span>
+<span id="cb24-106"><a href="#cb24-106" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Disorderly Conduct`) &amp;</span></span>
+<span id="cb24-107"><a href="#cb24-107" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Suicide) &amp;</span></span>
+<span id="cb24-108"><a href="#cb24-108" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(Abuse) &amp;</span></span>
+<span id="cb24-109"><a href="#cb24-109" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Non-subst Dx`) &amp;</span></span>
+<span id="cb24-110"><a href="#cb24-110" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Subst Dx`) &amp;</span></span>
+<span id="cb24-111"><a href="#cb24-111" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  !is.na(`Psych meds.`))</span></span>
+<span id="cb24-112"><a href="#cb24-112" aria-hidden="true" tabindex="-1"></a><span class="co"># impute numeric predictors using mice</span></span>
+<span id="cb24-113"><a href="#cb24-113" aria-hidden="true" tabindex="-1"></a><span class="co">#adhd_data &lt;- complete(mice(data=adhd_data[,:53], method=&quot;pmm&quot;, print=FALSE))</span></span>
+<span id="cb24-114"><a href="#cb24-114" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
+<span id="cb24-115"><a href="#cb24-115" aria-hidden="true" tabindex="-1"></a><span class="co"># create dummy variables for categorical features</span></span>
+<span id="cb24-116"><a href="#cb24-116" aria-hidden="true" tabindex="-1"></a>adhd_dummy <span class="ot">&lt;-</span> <span class="fu">dummyVars</span>(Suicide <span class="sc">~</span> ., <span class="at">data =</span> adhd_newdata) </span>
+<span id="cb24-117"><a href="#cb24-117" aria-hidden="true" tabindex="-1"></a>adhd_dummy <span class="ot">&lt;-</span> <span class="fu">predict</span>(adhd_dummy, <span class="at">newdata=</span>adhd_newdata)</span>
+<span id="cb24-118"><a href="#cb24-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-119"><a href="#cb24-119" aria-hidden="true" tabindex="-1"></a><span class="co"># center and scaling</span></span>
+<span id="cb24-120"><a href="#cb24-120" aria-hidden="true" tabindex="-1"></a>adhd_transformed <span class="ot">&lt;-</span> adhd_dummy <span class="sc">%&gt;%</span> </span>
+<span id="cb24-121"><a href="#cb24-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">preProcess</span>(<span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-122"><a href="#cb24-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(adhd_dummy) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-123"><a href="#cb24-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb24-124"><a href="#cb24-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-125"><a href="#cb24-125" aria-hidden="true" tabindex="-1"></a><span class="co"># add Suicide column</span></span>
+<span id="cb24-126"><a href="#cb24-126" aria-hidden="true" tabindex="-1"></a>adhd_transformed<span class="sc">$</span>Suicide <span class="ot">&lt;-</span> adhd_newdata<span class="sc">$</span>Suicide</span>
+<span id="cb24-127"><a href="#cb24-127" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adhd_transformed)</span>
+<span id="cb24-128"><a href="#cb24-128" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
+<span id="cb24-129"><a href="#cb24-129" aria-hidden="true" tabindex="-1"></a>partition <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(adhd_data<span class="sc">$</span>Suicide, <span class="at">p=</span><span class="fl">0.75</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-130"><a href="#cb24-130" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> adhd_data[partition,]</span>
+<span id="cb24-131"><a href="#cb24-131" aria-hidden="true" tabindex="-1"></a>testing <span class="ot">&lt;-</span> adhd_data[<span class="sc">-</span>partition,]</span>
+<span id="cb24-132"><a href="#cb24-132" aria-hidden="true" tabindex="-1"></a><span class="co"># training/validation partition for independent variables</span></span>
+<span id="cb24-133"><a href="#cb24-133" aria-hidden="true" tabindex="-1"></a><span class="co">#X.train &lt;- ld.clean[partition, ] %&gt;% dplyr::select(-Loan_Status)</span></span>
+<span id="cb24-134"><a href="#cb24-134" aria-hidden="true" tabindex="-1"></a><span class="co">#X.test &lt;- ld.clean[-partition, ] %&gt;% dplyr::select(-Loan_Status)</span></span>
+<span id="cb24-135"><a href="#cb24-135" aria-hidden="true" tabindex="-1"></a><span class="co"># training/validation partition for dependent variable Loan_Status</span></span>
+<span id="cb24-136"><a href="#cb24-136" aria-hidden="true" tabindex="-1"></a><span class="co">#y.train &lt;- ld.clean$Loan_Status[partition]</span></span>
+<span id="cb24-137"><a href="#cb24-137" aria-hidden="true" tabindex="-1"></a><span class="co">#y.test &lt;- ld.clean$Loan_Status[-partition]</span></span>
+<span id="cb24-138"><a href="#cb24-138" aria-hidden="true" tabindex="-1"></a><span class="co"># create subset of ADHD Questions for PCA</span></span>
+<span id="cb24-139"><a href="#cb24-139" aria-hidden="true" tabindex="-1"></a>adhd_ques_pca <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">21</span>)], as.numeric)</span>
+<span id="cb24-140"><a href="#cb24-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-141"><a href="#cb24-141" aria-hidden="true" tabindex="-1"></a><span class="co"># create subset of MD Questions for PCA</span></span>
+<span id="cb24-142"><a href="#cb24-142" aria-hidden="true" tabindex="-1"></a>md_ques_pca <span class="ot">&lt;-</span> <span class="fu">sapply</span>(adhd_data[,<span class="fu">c</span>(<span class="dv">23</span><span class="sc">:</span><span class="dv">37</span>)], as.numeric)</span>
+<span id="cb24-143"><a href="#cb24-143" aria-hidden="true" tabindex="-1"></a>pca_adhd <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(adhd_ques_pca, <span class="at">scale. =</span> <span class="cn">TRUE</span>, <span class="at">center=</span><span class="cn">TRUE</span>)</span>
+<span id="cb24-144"><a href="#cb24-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-145"><a href="#cb24-145" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(adhd_ques_pca, pca_adhd<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-146"><a href="#cb24-146" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>(<span class="at">booktabs =</span> T, <span class="at">caption =</span><span class="st">&quot;ADHD Correlations&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-147"><a href="#cb24-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>), <span class="at">full_width =</span> F) </span>
+<span id="cb24-148"><a href="#cb24-148" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_adhd)</span>
+<span id="cb24-149"><a href="#cb24-149" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_adhd)</span>
+<span id="cb24-150"><a href="#cb24-150" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC2</span></span>
+<span id="cb24-151"><a href="#cb24-151" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_adhd, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
+<span id="cb24-152"><a href="#cb24-152" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_adhd,</span>
+<span id="cb24-153"><a href="#cb24-153" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span><span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
+<span id="cb24-154"><a href="#cb24-154" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
+<span id="cb24-155"><a href="#cb24-155" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
+<span id="cb24-156"><a href="#cb24-156" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb24-157"><a href="#cb24-157" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb24-158"><a href="#cb24-158" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC3</span></span>
+<span id="cb24-159"><a href="#cb24-159" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_adhd, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
+<span id="cb24-160"><a href="#cb24-160" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_adhd,</span>
+<span id="cb24-161"><a href="#cb24-161" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
+<span id="cb24-162"><a href="#cb24-162" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
+<span id="cb24-163"><a href="#cb24-163" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
+<span id="cb24-164"><a href="#cb24-164" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)</span>
+<span id="cb24-165"><a href="#cb24-165" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb24-166"><a href="#cb24-166" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC2 and PC3</span></span>
+<span id="cb24-167"><a href="#cb24-167" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_adhd, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
+<span id="cb24-168"><a href="#cb24-168" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_adhd,</span>
+<span id="cb24-169"><a href="#cb24-169" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
+<span id="cb24-170"><a href="#cb24-170" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
+<span id="cb24-171"><a href="#cb24-171" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
+<span id="cb24-172"><a href="#cb24-172" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb24-173"><a href="#cb24-173" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb24-174"><a href="#cb24-174" aria-hidden="true" tabindex="-1"></a>pca_md <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(md_ques_pca, <span class="at">scale. =</span> <span class="cn">TRUE</span>, <span class="at">center=</span><span class="cn">TRUE</span>)</span>
+<span id="cb24-175"><a href="#cb24-175" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(md_ques_pca, pca_md<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-176"><a href="#cb24-176" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>(<span class="at">booktabs =</span> T, <span class="at">caption =</span><span class="st">&quot;md Correlations&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-177"><a href="#cb24-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>), <span class="at">full_width =</span> F) </span>
+<span id="cb24-178"><a href="#cb24-178" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_md)</span>
+<span id="cb24-179"><a href="#cb24-179" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_md)</span>
+<span id="cb24-180"><a href="#cb24-180" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC2</span></span>
+<span id="cb24-181"><a href="#cb24-181" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_md, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
+<span id="cb24-182"><a href="#cb24-182" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_md,</span>
+<span id="cb24-183"><a href="#cb24-183" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span><span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
+<span id="cb24-184"><a href="#cb24-184" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
+<span id="cb24-185"><a href="#cb24-185" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
+<span id="cb24-186"><a href="#cb24-186" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb24-187"><a href="#cb24-187" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb24-188"><a href="#cb24-188" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC1 and PC3</span></span>
+<span id="cb24-189"><a href="#cb24-189" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_md, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
+<span id="cb24-190"><a href="#cb24-190" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_md,</span>
+<span id="cb24-191"><a href="#cb24-191" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
+<span id="cb24-192"><a href="#cb24-192" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
+<span id="cb24-193"><a href="#cb24-193" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
+<span id="cb24-194"><a href="#cb24-194" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)</span>
+<span id="cb24-195"><a href="#cb24-195" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb24-196"><a href="#cb24-196" aria-hidden="true" tabindex="-1"></a><span class="co">#top 10 contributors to the dimension of PC2 and PC3</span></span>
+<span id="cb24-197"><a href="#cb24-197" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_md, <span class="at">choice =</span> <span class="st">&quot;var&quot;</span>, <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">top =</span> <span class="dv">15</span>)</span>
+<span id="cb24-198"><a href="#cb24-198" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_var</span>(pca_md,</span>
+<span id="cb24-199"><a href="#cb24-199" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.var =</span> <span class="st">&quot;contrib&quot;</span>, <span class="co"># Color by contributions to the PC</span></span>
+<span id="cb24-200"><a href="#cb24-200" aria-hidden="true" tabindex="-1"></a>             <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</span>
+<span id="cb24-201"><a href="#cb24-201" aria-hidden="true" tabindex="-1"></a>             <span class="at">repel =</span> <span class="cn">TRUE</span>     <span class="co"># Avoid text overlapping</span></span>
+<span id="cb24-202"><a href="#cb24-202" aria-hidden="true" tabindex="-1"></a>             ,<span class="at">axes=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb24-203"><a href="#cb24-203" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb24-204"><a href="#cb24-204" aria-hidden="true" tabindex="-1"></a>gb__train <span class="ot">&lt;-</span><span class="fu">subset</span>(training[<span class="fu">complete.cases</span>(training<span class="sc">$</span>Suicide), ], <span class="at">select=</span> <span class="sc">-</span><span class="st">`</span><span class="at">Non-subst Dx</span><span class="st">`</span>)</span>
+<span id="cb24-205"><a href="#cb24-205" aria-hidden="true" tabindex="-1"></a>gb__test <span class="ot">&lt;-</span><span class="fu">subset</span>(testing[<span class="fu">complete.cases</span>(testing<span class="sc">$</span>Suicide), ], <span class="at">select=</span> <span class="sc">-</span><span class="st">`</span><span class="at">Non-subst Dx</span><span class="st">`</span>)</span>
+<span id="cb24-206"><a href="#cb24-206" aria-hidden="true" tabindex="-1"></a>y_label_tr <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(gb__train<span class="sc">$</span>Suicide)</span>
+<span id="cb24-207"><a href="#cb24-207" aria-hidden="true" tabindex="-1"></a>y_label_test <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(gb__test<span class="sc">$</span>Suicide)</span>
+<span id="cb24-208"><a href="#cb24-208" aria-hidden="true" tabindex="-1"></a>gb__train <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">subset</span>(gb__train, <span class="at">select =</span> <span class="sc">-</span>Suicide), as.numeric)</span>
+<span id="cb24-209"><a href="#cb24-209" aria-hidden="true" tabindex="-1"></a>gb_test <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">subset</span>(gb__test, <span class="at">select =</span> <span class="sc">-</span>Suicide), as.numeric)</span>
+<span id="cb24-210"><a href="#cb24-210" aria-hidden="true" tabindex="-1"></a>Folds <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb24-211"><a href="#cb24-211" aria-hidden="true" tabindex="-1"></a>    <span class="at">Fold1 =</span> <span class="fu">as.integer</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(gb__train),<span class="at">by =</span> <span class="dv">3</span>))</span>
+<span id="cb24-212"><a href="#cb24-212" aria-hidden="true" tabindex="-1"></a>  , <span class="at">Fold2 =</span> <span class="fu">as.integer</span>(<span class="fu">seq</span>(<span class="dv">2</span>,<span class="fu">nrow</span>(gb__train),<span class="at">by =</span> <span class="dv">3</span>))</span>
+<span id="cb24-213"><a href="#cb24-213" aria-hidden="true" tabindex="-1"></a>  , <span class="at">Fold3 =</span> <span class="fu">as.integer</span>(<span class="fu">seq</span>(<span class="dv">3</span>,<span class="fu">nrow</span>(gb__train),<span class="at">by =</span> <span class="dv">3</span>))</span>
+<span id="cb24-214"><a href="#cb24-214" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-215"><a href="#cb24-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-216"><a href="#cb24-216" aria-hidden="true" tabindex="-1"></a>scoringFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(max_depth, min_child_weight, subsample) {</span>
+<span id="cb24-217"><a href="#cb24-217" aria-hidden="true" tabindex="-1"></a>  dtrain <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(gb__train, <span class="at">label=</span>y_label_tr)</span>
+<span id="cb24-218"><a href="#cb24-218" aria-hidden="true" tabindex="-1"></a>  Pars <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
+<span id="cb24-219"><a href="#cb24-219" aria-hidden="true" tabindex="-1"></a>      <span class="at">booster =</span> <span class="st">&quot;gbtree&quot;</span></span>
+<span id="cb24-220"><a href="#cb24-220" aria-hidden="true" tabindex="-1"></a>    , <span class="at">eta =</span> <span class="fl">0.01</span></span>
+<span id="cb24-221"><a href="#cb24-221" aria-hidden="true" tabindex="-1"></a>    , <span class="at">max_depth =</span> max_depth</span>
+<span id="cb24-222"><a href="#cb24-222" aria-hidden="true" tabindex="-1"></a>    , <span class="at">min_child_weight =</span> min_child_weight</span>
+<span id="cb24-223"><a href="#cb24-223" aria-hidden="true" tabindex="-1"></a>    , <span class="at">subsample =</span> subsample</span>
+<span id="cb24-224"><a href="#cb24-224" aria-hidden="true" tabindex="-1"></a>    , <span class="at">objective =</span> <span class="st">&quot;binary:logistic&quot;</span></span>
+<span id="cb24-225"><a href="#cb24-225" aria-hidden="true" tabindex="-1"></a>    , <span class="at">eval_metric =</span> <span class="st">&quot;auc&quot;</span></span>
+<span id="cb24-226"><a href="#cb24-226" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-227"><a href="#cb24-227" aria-hidden="true" tabindex="-1"></a>  xgbcv <span class="ot">&lt;-</span> <span class="fu">xgb.cv</span>(</span>
+<span id="cb24-228"><a href="#cb24-228" aria-hidden="true" tabindex="-1"></a>      <span class="at">params =</span> Pars</span>
+<span id="cb24-229"><a href="#cb24-229" aria-hidden="true" tabindex="-1"></a>    , <span class="at">data =</span> dtrain</span>
+<span id="cb24-230"><a href="#cb24-230" aria-hidden="true" tabindex="-1"></a>    , <span class="at">nround =</span> <span class="dv">100</span></span>
+<span id="cb24-231"><a href="#cb24-231" aria-hidden="true" tabindex="-1"></a>    , <span class="at">folds =</span> Folds</span>
+<span id="cb24-232"><a href="#cb24-232" aria-hidden="true" tabindex="-1"></a>    , <span class="at">prediction =</span> <span class="cn">TRUE</span></span>
+<span id="cb24-233"><a href="#cb24-233" aria-hidden="true" tabindex="-1"></a>    , <span class="at">showsd =</span> <span class="cn">TRUE</span></span>
+<span id="cb24-234"><a href="#cb24-234" aria-hidden="true" tabindex="-1"></a>    , <span class="at">early_stopping_rounds =</span> <span class="dv">5</span></span>
+<span id="cb24-235"><a href="#cb24-235" aria-hidden="true" tabindex="-1"></a>    , <span class="at">maximize =</span> <span class="cn">TRUE</span></span>
+<span id="cb24-236"><a href="#cb24-236" aria-hidden="true" tabindex="-1"></a>            , <span class="at">verbose =</span> <span class="dv">0</span>)</span>
+<span id="cb24-237"><a href="#cb24-237" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
+<span id="cb24-238"><a href="#cb24-238" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>( </span>
+<span id="cb24-239"><a href="#cb24-239" aria-hidden="true" tabindex="-1"></a>        <span class="at">Score =</span> <span class="fu">max</span>(xgbcv<span class="sc">$</span>evaluation_log<span class="sc">$</span>test_auc_mean)</span>
+<span id="cb24-240"><a href="#cb24-240" aria-hidden="true" tabindex="-1"></a>      , <span class="at">nrounds =</span> xgbcv<span class="sc">$</span>best_iteration</span>
+<span id="cb24-241"><a href="#cb24-241" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-242"><a href="#cb24-242" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-243"><a href="#cb24-243" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-244"><a href="#cb24-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-245"><a href="#cb24-245" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">50</span>)</span>
+<span id="cb24-246"><a href="#cb24-246" aria-hidden="true" tabindex="-1"></a>bounds <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
+<span id="cb24-247"><a href="#cb24-247" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_depth =</span> <span class="fu">c</span>(2L, 10L)</span>
+<span id="cb24-248"><a href="#cb24-248" aria-hidden="true" tabindex="-1"></a>  , <span class="at">min_child_weight =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">25</span>)</span>
+<span id="cb24-249"><a href="#cb24-249" aria-hidden="true" tabindex="-1"></a>  , <span class="at">subsample =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, .<span class="dv">5</span>)</span>
+<span id="cb24-250"><a href="#cb24-250" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-251"><a href="#cb24-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-252"><a href="#cb24-252" aria-hidden="true" tabindex="-1"></a>optObj <span class="ot">&lt;-</span> <span class="fu">bayesOpt</span>(</span>
+<span id="cb24-253"><a href="#cb24-253" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> scoringFunction</span>
+<span id="cb24-254"><a href="#cb24-254" aria-hidden="true" tabindex="-1"></a>  , <span class="at">bounds =</span> bounds</span>
+<span id="cb24-255"><a href="#cb24-255" aria-hidden="true" tabindex="-1"></a>  , <span class="at">initPoints =</span> <span class="dv">4</span></span>
+<span id="cb24-256"><a href="#cb24-256" aria-hidden="true" tabindex="-1"></a>  , <span class="at">iters.n =</span> <span class="dv">3</span></span>
+<span id="cb24-257"><a href="#cb24-257" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-258"><a href="#cb24-258" aria-hidden="true" tabindex="-1"></a>optObj<span class="sc">$</span>scoreSummary</span>
+<span id="cb24-259"><a href="#cb24-259" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">getBestPars</span>(optObj))</span>
+<span id="cb24-260"><a href="#cb24-260" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
+<span id="cb24-261"><a href="#cb24-261" aria-hidden="true" tabindex="-1"></a>mode <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb24-262"><a href="#cb24-262" aria-hidden="true" tabindex="-1"></a>  levels <span class="ot">&lt;-</span> <span class="fu">unique</span>(x)</span>
+<span id="cb24-263"><a href="#cb24-263" aria-hidden="true" tabindex="-1"></a>  indicies <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(x, levels))</span>
+<span id="cb24-264"><a href="#cb24-264" aria-hidden="true" tabindex="-1"></a>  levels[<span class="fu">which.max</span>(indicies)]</span>
+<span id="cb24-265"><a href="#cb24-265" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-266"><a href="#cb24-266" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up training data</span></span>
+<span id="cb24-267"><a href="#cb24-267" aria-hidden="true" tabindex="-1"></a>training_factors <span class="ot">&lt;-</span> training <span class="sc">%&gt;%</span> </span>
+<span id="cb24-268"><a href="#cb24-268" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Age, <span class="sc">-</span><span class="st">`</span><span class="at">ADHD Total</span><span class="st">`</span>, <span class="st">`</span><span class="at">MD TOTAL</span><span class="st">`</span>) </span>
+<span id="cb24-269"><a href="#cb24-269" aria-hidden="true" tabindex="-1"></a>training_factors <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">lapply</span>(training_factors, as.factor))</span>
+<span id="cb24-270"><a href="#cb24-270" aria-hidden="true" tabindex="-1"></a>train_knn <span class="ot">&lt;-</span> training_factors <span class="sc">%&gt;%</span> </span>
+<span id="cb24-271"><a href="#cb24-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="fu">mode</span>(.))))</span>
+<span id="cb24-272"><a href="#cb24-272" aria-hidden="true" tabindex="-1"></a><span class="fu">mode</span>(train_knn<span class="sc">$</span>Psych.meds.) </span>
+<span id="cb24-273"><a href="#cb24-273" aria-hidden="true" tabindex="-1"></a>train_knn<span class="sc">$</span>Psych.meds.[<span class="fu">which</span>(<span class="fu">is.na</span>(train_knn<span class="sc">$</span>Psych.meds.))] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb24-274"><a href="#cb24-274" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(train_knn<span class="sc">$</span>Psych.meds.))</span>
+<span id="cb24-275"><a href="#cb24-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-276"><a href="#cb24-276" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up testing data</span></span>
+<span id="cb24-277"><a href="#cb24-277" aria-hidden="true" tabindex="-1"></a>testing_factors <span class="ot">&lt;-</span> testing <span class="sc">%&gt;%</span> </span>
+<span id="cb24-278"><a href="#cb24-278" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Age, <span class="sc">-</span><span class="st">`</span><span class="at">ADHD Total</span><span class="st">`</span>, <span class="st">`</span><span class="at">MD TOTAL</span><span class="st">`</span>) </span>
+<span id="cb24-279"><a href="#cb24-279" aria-hidden="true" tabindex="-1"></a>testing_factors <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">lapply</span>(testing_factors, as.factor))</span>
+<span id="cb24-280"><a href="#cb24-280" aria-hidden="true" tabindex="-1"></a>test_knn <span class="ot">&lt;-</span> testing_factors <span class="sc">%&gt;%</span> </span>
+<span id="cb24-281"><a href="#cb24-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="fu">mode</span>(.))))</span>
+<span id="cb24-282"><a href="#cb24-282" aria-hidden="true" tabindex="-1"></a><span class="fu">mode</span>(test_knn<span class="sc">$</span>Psych.meds.) </span>
+<span id="cb24-283"><a href="#cb24-283" aria-hidden="true" tabindex="-1"></a>test_knn<span class="sc">$</span>Psych.meds.[<span class="fu">which</span>(<span class="fu">is.na</span>(test_knn<span class="sc">$</span>Psych.meds.))] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb24-284"><a href="#cb24-284" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(test_knn<span class="sc">$</span>Psych.meds.))</span>
+<span id="cb24-285"><a href="#cb24-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-286"><a href="#cb24-286" aria-hidden="true" tabindex="-1"></a><span class="co"># Train KNN model</span></span>
+<span id="cb24-287"><a href="#cb24-287" aria-hidden="true" tabindex="-1"></a>train.knn <span class="ot">&lt;-</span> (train_knn[, <span class="fu">names</span>(train_knn) <span class="sc">!=</span> <span class="st">&quot;Suicide&quot;</span>])</span>
+<span id="cb24-288"><a href="#cb24-288" aria-hidden="true" tabindex="-1"></a>prep <span class="ot">&lt;-</span> <span class="fu">preProcess</span>(<span class="at">x =</span> train.knn, <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>))</span>
+<span id="cb24-289"><a href="#cb24-289" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">&quot;repeatedcv&quot;</span>, <span class="at">repeats =</span> <span class="dv">5</span>) </span>
+<span id="cb24-290"><a href="#cb24-290" aria-hidden="true" tabindex="-1"></a>knn_model <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., <span class="at">data =</span> train_knn, </span>
+<span id="cb24-291"><a href="#cb24-291" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;knn&quot;</span>, </span>
+<span id="cb24-292"><a href="#cb24-292" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> cl, </span>
+<span id="cb24-293"><a href="#cb24-293" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>), </span>
+<span id="cb24-294"><a href="#cb24-294" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">20</span>)</span>
+<span id="cb24-295"><a href="#cb24-295" aria-hidden="true" tabindex="-1"></a>knn_model </span>
+<span id="cb24-296"><a href="#cb24-296" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate Model</span></span>
+<span id="cb24-297"><a href="#cb24-297" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(knn_model)</span>
+<span id="cb24-298"><a href="#cb24-298" aria-hidden="true" tabindex="-1"></a>knn_predict <span class="ot">&lt;-</span> <span class="fu">predict</span>(knn_model, <span class="at">newdata =</span> test_knn)</span>
+<span id="cb24-299"><a href="#cb24-299" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(knn_predict <span class="sc">==</span> test_knn<span class="sc">$</span>Suicide) <span class="co"># accuracy</span></span>
+<span id="cb24-300"><a href="#cb24-300" aria-hidden="true" tabindex="-1"></a>conf.mat.knn <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(knn_predict, test_knn<span class="sc">$</span>Suicide)</span>
+<span id="cb24-301"><a href="#cb24-301" aria-hidden="true" tabindex="-1"></a>accuracy <span class="ot">&lt;-</span> <span class="fu">round</span>(conf.mat.knn<span class="sc">$</span>overall[[<span class="dv">1</span>]], <span class="dv">3</span>)<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb24-302"><a href="#cb24-302" aria-hidden="true" tabindex="-1"></a>conf.mat.knn</span>
+<span id="cb24-303"><a href="#cb24-303" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
+<span id="cb24-304"><a href="#cb24-304" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up training data</span></span>
+<span id="cb24-305"><a href="#cb24-305" aria-hidden="true" tabindex="-1"></a>training_factors <span class="ot">&lt;-</span> training <span class="sc">%&gt;%</span> </span>
+<span id="cb24-306"><a href="#cb24-306" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-307"><a href="#cb24-307" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Age, <span class="sc">-</span><span class="st">`</span><span class="at">ADHD Total</span><span class="st">`</span>, <span class="sc">-</span><span class="st">`</span><span class="at">MD TOTAL</span><span class="st">`</span>) </span>
+<span id="cb24-308"><a href="#cb24-308" aria-hidden="true" tabindex="-1"></a>training_factors <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">lapply</span>(training_factors, as.factor))</span>
+<span id="cb24-309"><a href="#cb24-309" aria-hidden="true" tabindex="-1"></a>train_heir <span class="ot">&lt;-</span> training_factors <span class="sc">%&gt;%</span> </span>
+<span id="cb24-310"><a href="#cb24-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="fu">mode</span>(.))))</span>
+<span id="cb24-311"><a href="#cb24-311" aria-hidden="true" tabindex="-1"></a><span class="co"># mode(train_heir$Psych.meds.) </span></span>
+<span id="cb24-312"><a href="#cb24-312" aria-hidden="true" tabindex="-1"></a><span class="co"># train_heir$Psych.meds.[which(is.na(train_heir$Psych.meds.))] </span></span>
+<span id="cb24-313"><a href="#cb24-313" aria-hidden="true" tabindex="-1"></a><span class="co"># sum(is.na(train_heir))</span></span>
+<span id="cb24-314"><a href="#cb24-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-315"><a href="#cb24-315" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up testing data</span></span>
+<span id="cb24-316"><a href="#cb24-316" aria-hidden="true" tabindex="-1"></a>testing_factors <span class="ot">&lt;-</span> testing <span class="sc">%&gt;%</span> </span>
+<span id="cb24-317"><a href="#cb24-317" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-318"><a href="#cb24-318" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Age, <span class="sc">-</span><span class="st">`</span><span class="at">ADHD Total</span><span class="st">`</span>, <span class="sc">-</span><span class="st">`</span><span class="at">MD TOTAL</span><span class="st">`</span>) </span>
+<span id="cb24-319"><a href="#cb24-319" aria-hidden="true" tabindex="-1"></a>testing_factors <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">lapply</span>(testing_factors, as.factor))</span>
+<span id="cb24-320"><a href="#cb24-320" aria-hidden="true" tabindex="-1"></a>test_heir <span class="ot">&lt;-</span> testing_factors <span class="sc">%&gt;%</span> </span>
+<span id="cb24-321"><a href="#cb24-321" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="fu">mode</span>(.))))</span>
+<span id="cb24-322"><a href="#cb24-322" aria-hidden="true" tabindex="-1"></a><span class="co"># mode(test_heir$Psych.meds.) </span></span>
+<span id="cb24-323"><a href="#cb24-323" aria-hidden="true" tabindex="-1"></a><span class="co"># test_heir$Psych.meds.[which(is.na(test_heir$Psych.meds.))] </span></span>
+<span id="cb24-324"><a href="#cb24-324" aria-hidden="true" tabindex="-1"></a><span class="co"># sum(is.na(test_heir$Psych.meds.))</span></span>
+<span id="cb24-325"><a href="#cb24-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-326"><a href="#cb24-326" aria-hidden="true" tabindex="-1"></a><span class="co"># Train KNN model</span></span>
+<span id="cb24-327"><a href="#cb24-327" aria-hidden="true" tabindex="-1"></a>train.heir <span class="ot">&lt;-</span> (train_heir[, <span class="fu">names</span>(train_heir) <span class="sc">!=</span> <span class="st">&quot;Suicide&quot;</span>])</span>
+<span id="cb24-328"><a href="#cb24-328" aria-hidden="true" tabindex="-1"></a>prep <span class="ot">&lt;-</span> <span class="fu">preProcess</span>(<span class="at">x =</span> train.heir, <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>))</span>
+<span id="cb24-329"><a href="#cb24-329" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">&quot;repeatedcv&quot;</span>, <span class="at">repeats =</span> <span class="dv">5</span>) </span>
+<span id="cb24-330"><a href="#cb24-330" aria-hidden="true" tabindex="-1"></a>heir_model <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., <span class="at">data =</span> train_heir, </span>
+<span id="cb24-331"><a href="#cb24-331" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;knn&quot;</span>, </span>
+<span id="cb24-332"><a href="#cb24-332" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> cl, </span>
+<span id="cb24-333"><a href="#cb24-333" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>), </span>
+<span id="cb24-334"><a href="#cb24-334" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">20</span>)</span>
+<span id="cb24-335"><a href="#cb24-335" aria-hidden="true" tabindex="-1"></a>heir_model </span>
+<span id="cb24-336"><a href="#cb24-336" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate Model</span></span>
+<span id="cb24-337"><a href="#cb24-337" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heir_model)</span>
+<span id="cb24-338"><a href="#cb24-338" aria-hidden="true" tabindex="-1"></a>heir_predict <span class="ot">&lt;-</span> <span class="fu">predict</span>(heir_model, <span class="at">newdata =</span> test_heir)</span>
+<span id="cb24-339"><a href="#cb24-339" aria-hidden="true" tabindex="-1"></a>conf.mat.heir <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(heir_predict, test_heir<span class="sc">$</span>Suicide)</span>
+<span id="cb24-340"><a href="#cb24-340" aria-hidden="true" tabindex="-1"></a>accuracy <span class="ot">&lt;-</span> <span class="fu">round</span>(conf.mat.heir<span class="sc">$</span>overall[[<span class="dv">1</span>]], <span class="dv">3</span>)<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb24-341"><a href="#cb24-341" aria-hidden="true" tabindex="-1"></a><span class="co"># partitioning for train and test</span></span>
+<span id="cb24-342"><a href="#cb24-342" aria-hidden="true" tabindex="-1"></a>partition <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(adhd_transformed<span class="sc">$</span>Suicide, <span class="at">p=</span><span class="fl">0.75</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-343"><a href="#cb24-343" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> adhd_transformed[partition,]</span>
+<span id="cb24-344"><a href="#cb24-344" aria-hidden="true" tabindex="-1"></a>testing <span class="ot">&lt;-</span> adhd_transformed[<span class="sc">-</span>partition,]</span>
+<span id="cb24-345"><a href="#cb24-345" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">622</span>)</span>
+<span id="cb24-346"><a href="#cb24-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-347"><a href="#cb24-347" aria-hidden="true" tabindex="-1"></a><span class="co"># fit with svmLinear</span></span>
+<span id="cb24-348"><a href="#cb24-348" aria-hidden="true" tabindex="-1"></a>svm_lin_fit <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., </span>
+<span id="cb24-349"><a href="#cb24-349" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> training, </span>
+<span id="cb24-350"><a href="#cb24-350" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;svmLinear&quot;</span>,</span>
+<span id="cb24-351"><a href="#cb24-351" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>),</span>
+<span id="cb24-352"><a href="#cb24-352" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">5</span>,</span>
+<span id="cb24-353"><a href="#cb24-353" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>))</span>
+<span id="cb24-354"><a href="#cb24-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-355"><a href="#cb24-355" aria-hidden="true" tabindex="-1"></a>pred_lin_suicide <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm_lin_fit, testing)</span>
+<span id="cb24-356"><a href="#cb24-356" aria-hidden="true" tabindex="-1"></a>cm_lin <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing<span class="sc">$</span>Suicide, pred_lin_suicide)</span>
+<span id="cb24-357"><a href="#cb24-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-358"><a href="#cb24-358" aria-hidden="true" tabindex="-1"></a><span class="co"># fit with svmRadial</span></span>
+<span id="cb24-359"><a href="#cb24-359" aria-hidden="true" tabindex="-1"></a>svm_rad_fit <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., </span>
+<span id="cb24-360"><a href="#cb24-360" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> training, </span>
+<span id="cb24-361"><a href="#cb24-361" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</span>
+<span id="cb24-362"><a href="#cb24-362" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>),</span>
+<span id="cb24-363"><a href="#cb24-363" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">5</span>,</span>
+<span id="cb24-364"><a href="#cb24-364" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>))</span>
+<span id="cb24-365"><a href="#cb24-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-366"><a href="#cb24-366" aria-hidden="true" tabindex="-1"></a>pred_rad_suicide <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm_rad_fit, testing)</span>
+<span id="cb24-367"><a href="#cb24-367" aria-hidden="true" tabindex="-1"></a>cm_rad <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing<span class="sc">$</span>Suicide, pred_rad_suicide)</span>
+<span id="cb24-368"><a href="#cb24-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-369"><a href="#cb24-369" aria-hidden="true" tabindex="-1"></a><span class="co"># fit with svmPoly</span></span>
+<span id="cb24-370"><a href="#cb24-370" aria-hidden="true" tabindex="-1"></a>svm_poly_fit <span class="ot">&lt;-</span> <span class="fu">train</span>(Suicide <span class="sc">~</span> ., </span>
+<span id="cb24-371"><a href="#cb24-371" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> training, </span>
+<span id="cb24-372"><a href="#cb24-372" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;svmPoly&quot;</span>,</span>
+<span id="cb24-373"><a href="#cb24-373" aria-hidden="true" tabindex="-1"></a>                <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>),</span>
+<span id="cb24-374"><a href="#cb24-374" aria-hidden="true" tabindex="-1"></a>                <span class="at">tuneLength =</span> <span class="dv">5</span>,</span>
+<span id="cb24-375"><a href="#cb24-375" aria-hidden="true" tabindex="-1"></a>                <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>))</span>
+<span id="cb24-376"><a href="#cb24-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-377"><a href="#cb24-377" aria-hidden="true" tabindex="-1"></a>pred_poly_suicide <span class="ot">&lt;-</span> <span class="fu">predict</span>(svm_poly_fit, testing)</span>
+<span id="cb24-378"><a href="#cb24-378" aria-hidden="true" tabindex="-1"></a>cm_poly <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(testing<span class="sc">$</span>Suicide, pred_poly_suicide)</span>
+<span id="cb24-379"><a href="#cb24-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-380"><a href="#cb24-380" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate models</span></span>
+<span id="cb24-381"><a href="#cb24-381" aria-hidden="true" tabindex="-1"></a>conf.mat.svnpoly <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(pred_poly_suicide, testing<span class="sc">$</span>Suicide)</span>
+<span id="cb24-382"><a href="#cb24-382" aria-hidden="true" tabindex="-1"></a>conf.mat.svnrad <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(pred_rad_suicide, testing<span class="sc">$</span>Suicide)</span>
+<span id="cb24-383"><a href="#cb24-383" aria-hidden="true" tabindex="-1"></a>conf.mat.svnlin <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(pred_lin_suicide, testing<span class="sc">$</span>Suicide)</span>
+<span id="cb24-384"><a href="#cb24-384" aria-hidden="true" tabindex="-1"></a><span class="co">#Compare 3 models:</span></span>
+<span id="cb24-385"><a href="#cb24-385" aria-hidden="true" tabindex="-1"></a>svm_resamps <span class="ot">&lt;-</span> <span class="fu">resamples</span>(<span class="fu">list</span>(<span class="at">Linear =</span> svm_lin_fit, <span class="at">Radial =</span> svm_rad_fit, <span class="at">Poly =</span> svm_poly_fit))</span>
+<span id="cb24-386"><a href="#cb24-386" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svm_resamps)</span>
+<span id="cb24-387"><a href="#cb24-387" aria-hidden="true" tabindex="-1"></a><span class="co"># Important features</span></span>
+<span id="cb24-388"><a href="#cb24-388" aria-hidden="true" tabindex="-1"></a>imp_vars <span class="ot">&lt;-</span> <span class="fu">varImp</span>(svm_rad_fit, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
+<span id="cb24-389"><a href="#cb24-389" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(imp_vars, <span class="at">top=</span><span class="dv">10</span>)</span>
+<span id="cb24-390"><a href="#cb24-390" aria-hidden="true" tabindex="-1"></a>dtrain <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(gb__train, <span class="at">label=</span>y_label_tr)</span>
+<span id="cb24-391"><a href="#cb24-391" aria-hidden="true" tabindex="-1"></a>dtest <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(gb_test, <span class="at">label=</span>y_label_test)</span>
+<span id="cb24-392"><a href="#cb24-392" aria-hidden="true" tabindex="-1"></a>xgb <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(</span>
+<span id="cb24-393"><a href="#cb24-393" aria-hidden="true" tabindex="-1"></a>      <span class="at">params =</span> <span class="fu">list</span>( </span>
+<span id="cb24-394"><a href="#cb24-394" aria-hidden="true" tabindex="-1"></a>                  <span class="at">booster =</span> <span class="st">&quot;gbtree&quot;</span></span>
+<span id="cb24-395"><a href="#cb24-395" aria-hidden="true" tabindex="-1"></a>                , <span class="at">eta =</span> <span class="fl">0.01</span></span>
+<span id="cb24-396"><a href="#cb24-396" aria-hidden="true" tabindex="-1"></a>                , <span class="at">max_depth =</span> <span class="dv">10</span></span>
+<span id="cb24-397"><a href="#cb24-397" aria-hidden="true" tabindex="-1"></a>                , <span class="at">min_child_weight =</span> <span class="dv">1</span></span>
+<span id="cb24-398"><a href="#cb24-398" aria-hidden="true" tabindex="-1"></a>                , <span class="at">subsample =</span> .<span class="dv">5</span></span>
+<span id="cb24-399"><a href="#cb24-399" aria-hidden="true" tabindex="-1"></a>                , <span class="at">objective =</span> <span class="st">&quot;binary:logistic&quot;</span></span>
+<span id="cb24-400"><a href="#cb24-400" aria-hidden="true" tabindex="-1"></a>                , <span class="at">eval_metric =</span> <span class="st">&quot;auc&quot;</span></span>
+<span id="cb24-401"><a href="#cb24-401" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb24-402"><a href="#cb24-402" aria-hidden="true" tabindex="-1"></a>    , <span class="at">data =</span> dtrain</span>
+<span id="cb24-403"><a href="#cb24-403" aria-hidden="true" tabindex="-1"></a>    , <span class="at">nround =</span> <span class="dv">100</span></span>
+<span id="cb24-404"><a href="#cb24-404" aria-hidden="true" tabindex="-1"></a>    , <span class="at">maximize =</span> <span class="cn">TRUE</span></span>
+<span id="cb24-405"><a href="#cb24-405" aria-hidden="true" tabindex="-1"></a>            , <span class="at">verbose =</span> <span class="dv">0</span>)</span>
+<span id="cb24-406"><a href="#cb24-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-407"><a href="#cb24-407" aria-hidden="true" tabindex="-1"></a>xgbpred <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb,dtest)</span>
+<span id="cb24-408"><a href="#cb24-408" aria-hidden="true" tabindex="-1"></a>xgbpred <span class="ot">&lt;-</span> <span class="fu">ifelse</span> (xgbpred <span class="sc">&gt;</span> <span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb24-409"><a href="#cb24-409" aria-hidden="true" tabindex="-1"></a>y_label_test <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(y_label_test)</span>
+<span id="cb24-410"><a href="#cb24-410" aria-hidden="true" tabindex="-1"></a>conf.mat.xgboost <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">table</span>(xgbpred, y_label_test))</span>
+<span id="cb24-411"><a href="#cb24-411" aria-hidden="true" tabindex="-1"></a>conf.mat.xgboost</span>
+<span id="cb24-412"><a href="#cb24-412" aria-hidden="true" tabindex="-1"></a>(<span class="fu">round</span>(<span class="fu">data.frame</span>(conf.mat.knn<span class="sc">$</span>overall, </span>
+<span id="cb24-413"><a href="#cb24-413" aria-hidden="true" tabindex="-1"></a>                  conf.mat.heir<span class="sc">$</span>overall,</span>
+<span id="cb24-414"><a href="#cb24-414" aria-hidden="true" tabindex="-1"></a>                  conf.mat.svnlin<span class="sc">$</span>overall, </span>
+<span id="cb24-415"><a href="#cb24-415" aria-hidden="true" tabindex="-1"></a>                  conf.mat.svnrad<span class="sc">$</span>overall, </span>
+<span id="cb24-416"><a href="#cb24-416" aria-hidden="true" tabindex="-1"></a>                  conf.mat.svnpoly<span class="sc">$</span>overall, </span>
+<span id="cb24-417"><a href="#cb24-417" aria-hidden="true" tabindex="-1"></a>                  conf.mat.xgboost<span class="sc">$</span>overall), <span class="dv">3</span>))  <span class="sc">%&gt;%</span></span>
+<span id="cb24-418"><a href="#cb24-418" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(<span class="at">booktabs =</span>  T, <span class="at">caption =</span> <span class="st">&quot;Model Performance&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-419"><a href="#cb24-419" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped, HOLD_position&quot;</span>), <span class="at">full_width =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb24-420"><a href="#cb24-420" aria-hidden="true" tabindex="-1"></a>  <span class="fu">footnote</span>(<span class="fu">c</span>(</span>
+<span id="cb24-421"><a href="#cb24-421" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Variables from PCA &amp; factor analysis considered in model performance evaluation&quot;</span></span>
+<span id="cb24-422"><a href="#cb24-422" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div>
 </div>
 
 

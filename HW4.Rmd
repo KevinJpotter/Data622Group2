@@ -552,7 +552,7 @@ In several cases our model's scoring function appears to have a roughly 50% chan
 
 We develop three main models including a K-Clustering Method, Gradient Boosting method, and Support Vector Machines (SVM). Each focuses on a particular strategy. Our clustering attempts to identify groups of variables that are similar and use them to assess a patient's risk of attempting suicide. Gradient Boosting constructs decision trees with an emphasis on returning the most accurate decision path and our Support Vector Machine uses linear regression to classify the factors into groups using hyperplanes and by assessing the classes likelihood of being our target variable.  
 
-## Clustering Method
+## K-Clustering Method
 
 We use K-nearest neighbor (KNN) to identify clusters of patients that share similar patterns that could help us predict our target variable. KNN works by identifying the "k" closest neighbors in the dataset. This works particularly well for classification of factorized data, as our dataset happens to be. Results of this model's construction are shown below. 
 
@@ -608,6 +608,58 @@ conf.mat.knn
 
 Our KNN model accuracy comes out to `r round(conf.mat.knn$overall[[1]], 3)*100`%. We note that the ideal number of k was experimentally determined by running through several simulated model and testing the accuracy of each. The most accurate model was our final choice. 
 
+## Hierarchical Clustering
+
+In this unsupervised learning method we attempt to identify clear orders of factor and their respective levels across the dataset. To do this we isolate those factors, center and scale the values, and
+
+
+```{r}
+set.seed(622)
+# Clean up training data
+training_factors <- training %>% 
+  na.omit() %>% 
+  dplyr::select(-Age, -`ADHD Total`, -`MD TOTAL`) 
+training_factors <- data.frame(lapply(training_factors, as.factor))
+train_heir <- training_factors %>% 
+  mutate(across(everything(), ~replace_na(., mode(.))))
+# mode(train_heir$Psych.meds.) 
+# train_heir$Psych.meds.[which(is.na(train_heir$Psych.meds.))] 
+# sum(is.na(train_heir))
+
+# Clean up testing data
+testing_factors <- testing %>% 
+  na.omit() %>% 
+  dplyr::select(-Age, -`ADHD Total`, -`MD TOTAL`) 
+testing_factors <- data.frame(lapply(testing_factors, as.factor))
+test_heir <- testing_factors %>% 
+  mutate(across(everything(), ~replace_na(., mode(.))))
+# mode(test_heir$Psych.meds.) 
+# test_heir$Psych.meds.[which(is.na(test_heir$Psych.meds.))] 
+# sum(is.na(test_heir$Psych.meds.))
+
+# Train Heir model
+train.heir <- (train_heir[, names(train_heir) != "Suicide"])
+prep <- preProcess(x = train.heir, method = c("center", "scale"))
+cl <- trainControl(method="repeatedcv", repeats = 5) 
+heir_model <- train(Suicide ~ ., data = train_heir, 
+                method = "heir", 
+                trControl = cl, 
+                preProcess = c("center","scale"), 
+                tuneLength = 20)
+heir_model 
+```
+
+
+
+```{r}
+# Evaluate Model
+plot(heir_model)
+heir_predict <- predict(heir_model, newdata = test_heir)
+conf.mat.heir <- confusionMatrix(heir_predict, test_heir$Suicide)
+accuracy <- round(conf.mat.heir$overall[[1]], 3)*100
+```
+
+
 
 ## Support Vector Machine
 
@@ -659,6 +711,10 @@ svm_poly_fit <- train(Suicide ~ .,
 pred_poly_suicide <- predict(svm_poly_fit, testing)
 cm_poly <- confusionMatrix(testing$Suicide, pred_poly_suicide)
 
+# Evaluate models
+conf.mat.svnpoly <- confusionMatrix(pred_poly_suicide, testing$Suicide)
+conf.mat.svnrad <- confusionMatrix(pred_rad_suicide, testing$Suicide)
+conf.mat.svnlin <- confusionMatrix(pred_lin_suicide, testing$Suicide)
 ```
 
 
@@ -683,6 +739,7 @@ plot(imp_vars, top=10)
 
 
 Abuse, alcoholism, and Mood Disorder Question 1 were the most important factors in the SVM models. 
+
 
 ## Gradient Boosted 
 
@@ -709,7 +766,8 @@ xgb <- xgb.train(
 xgbpred <- predict(xgb,dtest)
 xgbpred <- ifelse (xgbpred > 0.5,1,0)
 y_label_test <- as.numeric(y_label_test)
-confusionMatrix(table(xgbpred, y_label_test))
+conf.mat.xgboost <- confusionMatrix(table(xgbpred, y_label_test))
+conf.mat.xgboost
 ```
 
 This produced an accuracy rate of 77.5%
@@ -717,6 +775,20 @@ This produced an accuracy rate of 77.5%
 # Model Performance
 
 We can see that model Gradient Boosted model has the best accuracy at 77.5% when applied to the test dataset. We could improve these models through more through feature selection via PCA or other methods and by focusing on feature engineering by using what was identified by these methods.
+
+```{r}
+(round(data.frame(conf.mat.knn$overall, 
+                  conf.mat.heir$overall,
+                  conf.mat.svnlin$overall, 
+                  conf.mat.svnrad$overall, 
+                  conf.mat.svnpoly$overall, 
+                  conf.mat.xgboost$overall), 3))  %>%
+  kbl(booktabs =  T, caption = "Model Performance") %>% 
+  kable_styling(latex_options = c("striped, HOLD_position"), full_width = F) %>%
+  footnote(c(
+    "Variables from PCA & factor analysis considered in model performance evaluation"
+  ))
+```
 
 
 # Conclusion
