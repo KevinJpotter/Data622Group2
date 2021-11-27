@@ -96,7 +96,6 @@ summary(income_data)
 
 
 ```{r}
-
 income_data %>% 
   count(income) %>% 
   ggplot(data=., aes(x=factor(income), y=n)) + 
@@ -201,6 +200,18 @@ dim(income_data_clean)
 ```
 
 
+```{r}
+library(tidyr)
+df <- income_data_clean
+df %>% 
+  dplyr::select_if(is.integer) %>% 
+  gather(key, value) %>% 
+  ggplot(aes(key, value)) + geom_boxplot() # What is fnlwgt?
+df %>% 
+  dplyr::select_if(is.integer) %>% 
+  gather(key, value) %>% 
+  ggplot(aes(key, value)) + geom_boxplot(aes(fill = key)) + facet_wrap(~key, scales = "free") # Lots of outliers 
+```
 
 
 
