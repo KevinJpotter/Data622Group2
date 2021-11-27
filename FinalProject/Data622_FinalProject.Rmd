@@ -200,7 +200,6 @@ dim(income_data_clean)
 ```
 
 
-
 ```{r}
 library(tidyr)
 df <- income_data_clean
