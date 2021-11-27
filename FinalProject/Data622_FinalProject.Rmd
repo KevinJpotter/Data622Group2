@@ -1,0 +1,95 @@
+---
+title: "Data622 - Group2 - FinalProject"
+author: "Amit Kapoor"
+date: "11/26/2021"
+output:
+  html_document:
+    fig_width: 15
+    highlight: pygments
+    number_sections: no
+    theme: flatly
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
+  always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, error=FALSE, warning=FALSE, message=FALSE, fig.align="center", fig.width = 10)
+```
+
+
+```{r libraries, include=FALSE, warning=FALSE, message=FALSE}
+# Libraries
+
+```
+
+
+# Overview
+
+
+
+
+# Approach
+
+
+
+
+# Data Exploration
+
+
+
+
+# Data Preparation
+
+## Handling missing values
+
+## Preprocess using transformation
+
+## Training and Test Partition
+
+
+
+# Build Models
+
+
+
+# Model Performance
+
+
+
+# Conclusion
+
+
+
+# References
+
+https://archive.ics.uci.edu/ml/datasets/Census+Income
+
+
+
+
+# Code Appendix
+
+
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
