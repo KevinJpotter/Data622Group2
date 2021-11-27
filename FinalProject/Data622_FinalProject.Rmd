@@ -3,6 +3,9 @@ title: "Data622 - Group2 - FinalProject"
 author: "Amit Kapoor"
 date: "11/26/2021"
 output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
   html_document:
     fig_width: 15
     highlight: pygments
@@ -10,9 +13,6 @@ output:
     theme: flatly
     toc: yes
     toc_float: yes
-  pdf_document:
-    latex_engine: xelatex
-    toc: yes
   always_allow_html: yes
 ---
 
@@ -23,7 +23,11 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, warning=FALSE, message=FALSE, fig
 
 ```{r libraries, include=FALSE, warning=FALSE, message=FALSE}
 # Libraries
-
+library(dplyr)
+library(summarytools)
+library(reshape2)
+library(ggplot2)
+library(DataExplorer)
 ```
 
 
@@ -41,8 +45,168 @@ knitr::opts_chunk$set(echo=FALSE, error=FALSE, warning=FALSE, message=FALSE, fig
 
 
 
+|VARIABLE NAME|DESCRIPTION|
+|--|----|
+|age|continuous|
+|workclass|Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked|
+|fnlwgt|continuous|
+|education|Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool|
+|education-num|continuous|
+|marital-status|Married-civ-spouse, Divorced, Never-married, Separated, Widowed, Married-spouse-absent, Married-AF-spouse|
+|occupation|Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces|
+|relationship|Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried|
+|race|White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black|
+|sex|Female, Male|
+|capital-gain|continuous|
+|capital-loss|continuous|
+|hours-per-week|continuous|
+|native-country|United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands|
+
+
+
+```{r}
+income_data <- read.csv("https://raw.githubusercontent.com/amit-kapoor/Data622Group2/main/FinalProject/data/census_income.csv", 
+                        check.names = FALSE) %>% 
+  na_if("")
+
+# categorical columns as factors
+income_data <- income_data %>% 
+  mutate(workclass=as.factor(workclass),
+         education=as.factor(education),
+         marital_status=as.factor(marital_status),
+         occupation=as.factor(occupation),
+         relationship=as.factor(relationship),
+         race=as.factor(race),
+         sex=as.factor(sex),
+         native_country=as.factor(native_country))
+
+```
+
+
+
+```{r}
+dfSummary(income_data, style = 'grid', graph.col = FALSE)
+```
+
+
+```{r}
+summary(income_data)
+```
+
+
+
+```{r}
+
+income_data %>% 
+  count(income) %>% 
+  ggplot(data=., aes(x=factor(income), y=n)) + 
+  geom_col() + 
+  xlab("Income") + 
+  ylab("Frequency") + 
+  ggtitle("Frequency of Income") + 
+  theme_classic()
+```
+
+
+
+```{r, cat-bar, fig.length =30, fig.width=10}
+
+# select categorical columns
+cat_cols = c()
+j <- 1
+for (i in 1:ncol(income_data)) {
+  if (class((income_data[,i])) == 'factor') {
+      cat_cols[j]=names(income_data[i])
+      j <- j+1
+  }
+}
+
+income_fact <-  income_data[cat_cols]
+# long format
+income_factm <- melt(income_fact, measure.vars = cat_cols, variable.name = 'metric', value.name = 'value')
+
+# plot categorical columns
+ggplot(income_factm, aes(x = value)) + 
+  geom_bar(aes(fill = metric)) + 
+  facet_wrap( ~ metric, nrow = 5L, scales = 'free') + coord_flip() + 
+  theme(legend.position = "none")
+```
+
+
+```{r plot_num}
+plot_histogram(income_data, geom_histogram_args = list("fill" = "tomato4"))
+```
+
+
+
+```{r}
+ggplot(income_data, aes(x=native_country, fill=income)) + 
+  geom_bar() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+```{r}
+ggplot(income_data, aes(x=workclass, fill=income)) + 
+  geom_bar() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+```{r}
+ggplot(income_data, aes(x=education, fill=income)) + 
+  geom_bar() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+```{r}
+ggplot(income_data, aes(x=sex, fill=income)) + 
+  geom_bar() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+
+
+```{r}
+ggplot(income_data, aes(x=race, fill=income)) + 
+  geom_bar() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+
 
 # Data Preparation
+
+
+
+
+
+```{r}
+index <- income_data == " ?"
+is.na(income_data) <- index
+```
+
+
+
+```{r}
+# finding NAs now in income_data
+sum(!complete.cases(income_data))
+```
+
+
+```{r}
+income_data_clean <- income_data[complete.cases(income_data),]
+dim(income_data_clean)
+```
+
+
+
+
+
+
+
+
 
 ## Handling missing values
 
