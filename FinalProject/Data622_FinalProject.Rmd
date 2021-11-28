@@ -3,9 +3,6 @@ title: "Data622 - Group2 - FinalProject"
 author: "Amit Kapoor"
 date: "11/26/2021"
 output:
-  pdf_document:
-    latex_engine: xelatex
-    toc: yes
   html_document:
     fig_width: 15
     highlight: pygments
@@ -13,6 +10,9 @@ output:
     theme: flatly
     toc: yes
     toc_float: yes
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
   always_allow_html: yes
 ---
 
@@ -28,12 +28,12 @@ library(summarytools)
 library(reshape2)
 library(ggplot2)
 library(DataExplorer)
+library(caret)
 ```
 
 
 # Overview
-
-
+The dataset for final project is from the UCI Machine Learning Repository. This dataset was donated by Ron Kohavi and Barry Becker. Extraction was done by Barry Becker from the 1994 Census database. A set of reasonably clean records was extracted using the following conditions: ((AAGE>16) && (AGI>100) && (AFNLWGT>1)&& (HRSWK>0)). Relevant paper is from Ron Kohavi, "Scaling Up the Accuracy of Naive-Bayes Classifiers: a Decision-Tree Hybrid", Proceedings of the Second International Conference on Knowledge Discovery and Data Mining, 1996. Prediction task is to determine whether a person makes over 50K a year.
 
 
 # Approach
@@ -43,7 +43,7 @@ library(DataExplorer)
 
 # Data Exploration
 
-
+There are 48842 observations of 15 variables. Each observation is for individual's income data with it's corresponding variables of interest. Below is the description of the variables of interest in the data set. 
 
 |VARIABLE NAME|DESCRIPTION|
 |--|----|
@@ -61,6 +61,7 @@ library(DataExplorer)
 |capital-loss|continuous|
 |hours-per-week|continuous|
 |native-country|United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands|
+|income|>50K, <=50K|
 
 
 
@@ -78,7 +79,8 @@ income_data <- income_data %>%
          relationship=as.factor(relationship),
          race=as.factor(race),
          sex=as.factor(sex),
-         native_country=as.factor(native_country))
+         native_country=as.factor(native_country),
+         income=as.factor(income))
 
 ```
 
@@ -173,13 +175,22 @@ ggplot(income_data, aes(x=race, fill=income)) +
 ```
 
 
+```{r corr}
+cors <- income_data %>% 
+  select_if(is.numeric) %>% 
+  na.omit() %>%
+  cor()
+corrplot::corrplot(cors, method="number")
+
+```
+
+
 
 
 # Data Preparation
 
 
-
-
+## Handling missing values
 
 ```{r}
 index <- income_data == " ?"
@@ -200,6 +211,13 @@ dim(income_data_clean)
 ```
 
 
+```{r miss-plot}
+# plot missing values
+plot_missing(income_data_clean)
+```
+
+
+
 ```{r}
 library(tidyr)
 df <- income_data_clean
@@ -214,17 +232,53 @@ df %>%
 ```
 
 
+The `fnlwgt` variable (i.e. final weight) is being removed since it has no predictive power and it is a feature to allocate similar weights to people with similar demographic characteristics. We are also removing variable `education` since it is just a label of `education_num` column.
 
+```{r}
+# removing columns fnlwgt and education
+income_data_clean <- income_data_clean %>% 
+  dplyr::select(-c(fnlwgt, education))
+```
 
-
-
-
-## Handling missing values
 
 ## Preprocess using transformation
 
+For highly-skewed feature distributions, we will perform boxcox transformation for these column to reduce the skewness and make it more Gaussian. Also combining the center and scale transforms will standardize the data. Now the features will have a mean value of 0 and a standard deviation of 1. This preprocessing uses the caret package's 'preprocessing' function to return a box cox transformation on all numeric variables in our income dataset. These numeric variables include age, education_num, capital_gain, capital_loss and hours_per_week.  
+
+
+```{r}
+set.seed(622)
+
+# Center and scaling for numeric features
+income_data_tf <- income_data_clean %>% 
+  dplyr::select(c("age", "education_num" , "capital_gain", "capital_loss","hours_per_week")) %>%
+  preProcess(method = c("BoxCox", "center","scale")) %>% 
+  predict(income_data_clean)
+
+head(income_data_tf)
+```
+
+
+```{r}
+income_data_tf$income <- plyr::mapvalues(income_data_tf$income, from = c(' >50K',' <=50K'), to = c(1,0))
+head(income_data_tf)
+```
+
+
+
+
 ## Training and Test Partition
 
+In this step for data preparation we will partition the training dataset in training and validation sets using `createDataPartition` method from `caret` package. We will reserve 70% for training and rest 30% for validation purpose.
+
+```{r partition}
+set.seed(622)
+partition <- createDataPartition(income_data_tf$income, p=0.70, list = FALSE)
+
+training <- income_data_tf[partition,]
+testing <- income_data_tf[-partition,]
+
+```
 
 
 # Build Models
