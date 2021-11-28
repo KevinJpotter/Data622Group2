@@ -193,7 +193,7 @@ corrplot::corrplot(cors, method="number")
 ## Handling missing values
 
 ```{r}
-index <- income_data == " ?"
+index <- income_data == "?"
 is.na(income_data) <- index
 ```
 
@@ -259,8 +259,14 @@ head(income_data_tf)
 ```
 
 
+```{r plot_num}
+plot_histogram(income_data_tf, geom_histogram_args = list("fill" = "tomato4"))
+```
+
+
+
 ```{r}
-income_data_tf$income <- plyr::mapvalues(income_data_tf$income, from = c(' >50K',' <=50K'), to = c(1,0))
+income_data_tf$income <- plyr::mapvalues(income_data_tf$income, from = c('>50K','<=50K'), to = c(1,0))
 head(income_data_tf)
 ```
 
