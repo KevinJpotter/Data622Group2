@@ -226,14 +226,13 @@ df %>%
 ## Training and Test Partition
 
 
-
 # Build Models
 
-
+Decide on the models we should use and share the workload.
 
 # Model Performance
 
-
+Include a table of results
 
 # Conclusion
 
