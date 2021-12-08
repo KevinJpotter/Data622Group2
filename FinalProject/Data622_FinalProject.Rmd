@@ -49,10 +49,14 @@ The dataset for final project is from the UCI Machine Learning Repository. This 
 
 # Approach
 
+For this final project, we begin with data exploration to understand the relationships our target variable ‘Income’ will have with our variables and the variables’ relationships to each other.  This allows us to determine the steps necessary to set up for model development. Once we have an understanding of these variables we use that knowledge to prepare the data. We handle missing values, subset, train and split the data 75/25 so that we may better extract information when modeling. Then, we build the models and predict with the testing dataset. 
+We focus on prediction accuracy when assessing the models but consider a host of performance statistics and real-world applications to determine which model is best. 
 
 
 
 # Data Exploration
+
+## Data Characteristics
 
 There are 48842 observations of 15 variables. Each observation is for individual's income data with it's corresponding variables of interest. Below is the description of the variables of interest in the data set. 
 
@@ -96,16 +100,28 @@ income_data <- income_data %>%
 ```
 
 
+## Data summary
+
+Below is a summary of the census income dataset. For this process we have already adjusted the data types to their proper forms. This summarizing function quantifies each variable in a manner consistent with their types. We notice the levels of each factor in the ‘Stats/Values’ column, the frequency of valid (non-missing) observations per level of our factors, and the quantity and percent missing alongside them. We review these statistics to identify any issues with each variable.
+
 
 ```{r}
 dfSummary(income_data, style = 'grid', graph.col = FALSE)
 ```
 
 
-```{r}
+Following the Missing column, it seems none of the columns have missing values but Stats / Values value column shows the variables that have value as '?'. `workclass`, `occupation`, `native_country` columns have values as '?'. The proportion of values for several columns shows significant differences and skew. For example, 67% of this dataset contains males applicants based on observations of the `sex` variable and 85.5% of data points are white people given the `race` variable. Due to the disproportionate levels within the variables we should expect the data is not representative of a larger population unless that population happens to have similar proportions. 
+
+Our numeric variables `age`, `fnlwgt`, `capital_gain`, `capital_loss` show signs of skew through the differences in their mean and medians as well as their ranges. The lowest value of `fnlwgt` variable was 12285, while the highest was 1490400. A similar problem exists with variables `capital_gain` and `capital_loss.` 
+
+Below is the summary of income dataset.
+
+```{r summ}
 summary(income_data)
 ```
 
+
+For exploratory purposes, we visualize the proportions to see just how skewed and disproportionate this dataset is. We include missing values as '?' to demonstrate their influence on the dataset as well. The chart below shows the distribution of all categorical variables, which includes the factors mentioned previously. 
 
 
 ```{r}
@@ -144,33 +160,38 @@ ggplot(income_factm, aes(x = value)) +
   theme(legend.position = "none")
 ```
 
+From this chart, it is very clear we have a dataset with mostly male, a long white race, and long private workclass. We see missing values in form of question mark (?) for variables `workclass`, `occupation`, `native_country`. The predictor variable Income has mostly <=50k value.
+
+We also generate histograms with the count of each observation to assess our numeric variable distributions. This will let us know more about the skewness, average values, and where potential outliers may be found for our numeric variables. The graph below shows their distributions.
+
 
 ```{r plot_num}
 plot_histogram(income_data, geom_histogram_args = list("fill" = "tomato4"))
 ```
 
+The next set of graphs shows the income distribution against countries, workclass, education, sex and race. We see male has higher income in both the categories than female. White race income distribution is significantly large as compared to other races. Private workclass earns more than any other categories and United States has larget income in both the categories compare to all other countries.
 
 
-```{r}
+```{r income-cntry}
 ggplot(income_data, aes(x=native_country, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-```{r}
+```{r inc-wc}
 ggplot(income_data, aes(x=workclass, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-```{r}
+```{rinc-ed}
 ggplot(income_data, aes(x=education, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
 
-```{r}
+```{r inc-sex}
 ggplot(income_data, aes(x=sex, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -179,12 +200,15 @@ ggplot(income_data, aes(x=sex, fill=income)) +
 
 
 
-```{r}
+```{r inc-race}
 ggplot(income_data, aes(x=race, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+## Correlations
+
+To determine how well each variable is correlated with our target variable and with one another, we construct a correlation plot. This plot contains the values of all correlation between variables represented by colors and numbers. The lighter the color, the lower the correlation. Meanwhile, darker blue indicates stronger positive correlations while darker red indicates stronger negative correlations.
 
 ```{r corr}
 cors <- income_data %>% 
@@ -195,13 +219,17 @@ corrplot::corrplot(cors, method="number")
 
 ```
 
+Given that our numeric features have correlation values near 0, they do not seem to be strongly correlated with our target. They also do not seem to have any correlation with one another so this is a factor that does not have to be dealt with. 
 
 
 
 # Data Preparation
 
+Before this income data can be used as input in our machine learning models, it must be cleaned, formatted, and restructured — this is typically known as preprocessing. In this income dataset there are columns having values as '?'. During the data preparation process we will clean these values, transform skewed features and perform train and test split for models. This preprocessing can help us with the outcome and significantly increase model accuracy of almost all learning algorithms.
 
 ## Handling missing values
+
+To this stage it is clear that our dataset does have missing values that appear as '?'. In the next step we replace the ? with NA and then take all the complete cases only. We do see there are 3620 cases with values missing and needs to be left out. We finally get the dataset with 45222 rows and 15 columns. 
 
 ```{r}
 index <- income_data == "?"
@@ -209,27 +237,24 @@ is.na(income_data) <- index
 ```
 
 
+```{r miss-plot}
+# plot missing values
+plot_missing(income_data)
+```
 
-```{r}
+```{r na-rows}
 # finding NAs now in income_data
 sum(!complete.cases(income_data))
 ```
 
 
-```{r}
+```{r clean-inc}
 income_data_clean <- income_data[complete.cases(income_data),]
 dim(income_data_clean)
 ```
 
 
-```{r miss-plot}
-# plot missing values
-plot_missing(income_data_clean)
-```
-
-
-
-```{r}
+```{r plot-clean-data}
 library(tidyr)
 df <- income_data_clean
 df %>% 
@@ -245,7 +270,7 @@ df %>%
 
 The `fnlwgt` variable (i.e. final weight) is being removed since it has no predictive power and it is a feature to allocate similar weights to people with similar demographic characteristics. We are also removing variable `education` since it is just a label of `education_num` column.
 
-```{r}
+```{r rem-fnl-ed}
 # removing columns fnlwgt and education
 income_data_clean <- income_data_clean %>% 
   dplyr::select(-c(fnlwgt, education))
@@ -257,7 +282,7 @@ income_data_clean <- income_data_clean %>%
 For highly-skewed feature distributions, we will perform boxcox transformation for these column to reduce the skewness and make it more Gaussian. Also combining the center and scale transforms will standardize the data. Now the features will have a mean value of 0 and a standard deviation of 1. This preprocessing uses the caret package's 'preprocessing' function to return a box cox transformation on all numeric variables in our income dataset. These numeric variables include age, education_num, capital_gain, capital_loss and hours_per_week.  
 
 
-```{r}
+```{r preproc}
 set.seed(622)
 
 # Center and scaling for numeric features
@@ -270,13 +295,8 @@ head(income_data_tf)
 ```
 
 
-```{r plot_num}
-plot_histogram(income_data_tf, geom_histogram_args = list("fill" = "tomato4"))
-```
 
-
-
-```{r}
+```{r final-inc-data}
 income_data_tf$income <- plyr::mapvalues(income_data_tf$income, from = c('>50K','<=50K'), to = c(1,0))
 head(income_data_tf)
 ```
@@ -296,6 +316,7 @@ training <- income_data_tf[partition,]
 testing <- income_data_tf[-partition,]
 
 ```
+
 
 # Build Models
 
