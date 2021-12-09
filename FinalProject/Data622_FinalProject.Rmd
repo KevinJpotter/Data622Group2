@@ -33,17 +33,16 @@ library(DataExplorer)
 
 # Overview
 
-
-
+As income inequality grows throughout the world, understanding the relationships between an individuals income and the other factors in this study we can better identify and address the underlying causes. This study will analyze how 15 factors such as age, county, working class, sex, race, education and more influence our target variable, income from a diverse dataset of over 48,842 individuals. The goal of this analysis is to develop models that best predict income, so that these models can be used to make better decisions when considering income from occupations. 
 
 # Approach
 
-
+In this analysis we attempt to predict the income of individuals given a host of variables. For purposes of simplicity, our target income variable has been broken into two categories: greater than \$50,000 or less than or equal to \$50,000. Ideally, this will makes its prediction less prone to error since we are using a host of categorical variables. We then explore the relationships between our variables, make any necessary changes prior to modeling, develop several models, and evaluate them using confusions matricies. Our focus in this analysis, will be on identifying the variables that improve real-world accuracy. 
 
 
 # Data Exploration
 
-
+In this section we begin exploring the data by creating a table with the variable names' and descriptions. There are 15 base variables of 48,842 individual observations. The table is shown below for reference. 
 
 |VARIABLE NAME|DESCRIPTION|
 |--|----|
@@ -62,6 +61,7 @@ library(DataExplorer)
 |hours-per-week|continuous|
 |native-country|United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands|
 
+We continue by identifying any potential sources of error in the analysis. This includes calculating the number of missing and outlier values for each variable, determining and assigning the proper methods to reduce missing and problematic data points. Due to the unique dataset, we determing and convert the variables to the proper data types. Here again, for simplicity and the most effective use of the data, all are converted to factors with multiple levels as intended by the orignial data contributer. A gridded table with frequencies of each factor's level, its identity, and the number of valid or missing data points are tabulated and presented below. 
 
 
 ```{r}
@@ -88,11 +88,18 @@ income_data <- income_data %>%
 dfSummary(income_data, style = 'grid', graph.col = FALSE)
 ```
 
+At first glance, it appears none of the data are missing values now and each variables is a factor data type as we intended but we begin to notice a few issues. Certain variables contain a multitude of distinct levels and as such, are interpreted as numeric data types with statistics for mean, median, minima, maxima, standard deviation and interquartile ranges. For example in the variables `age`, `fnlwgt`, `capital_gains`, `capital_loss` and `hours_per_week` produce nearly 100+ levels each with `fnlwgt` having 28523 levels. We will need to decide if these are worth adjusting further to capture the full picture of the relationships between the variables and our target. 
+
+We consider a different summary method, which at its base function calculates those statistical parameters previously mentioned and counts the number of observations for each level as performed above. This should confirm our previous grid table results but we should also look for changes, if there are any. The results of this new summary method are shown. 
+
 
 ```{r}
 summary(income_data)
 ```
 
+With this method, our first results are confirmed. However, there appear to be few differences, if any, in these results. The only noticible change is to our target variable, income, where the previous function interpreted the values as factors without levels rather than a series of character strings as this new method did. This indicates we might not need to make any further changes to the data types or adjustments in the quantity of missing values or outliers. 
+
+We take a closer look at our target variable to get a sense of what we are trying to predict. We also look for any inate imbalances within the target by spotting any unintentional bias towards a specific income level. This is achieved with a bar chart. 
 
 
 ```{r}
