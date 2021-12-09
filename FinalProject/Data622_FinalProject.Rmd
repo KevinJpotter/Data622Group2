@@ -332,16 +332,19 @@ head(income_data_tf)
 
 ## PCA and Factor Analysis
 
+In this section we try to find those variables which could be used to reduce the dimensions of the dataset while also explaining the variation among the variables. Factors and numeric values typically require they own kinds of analysis, specifically factor analysis and principle component analysis or PCA. We take advantage of the multitude of levels identified within our factors during data exploration and assign numeric codes to each of them. This will allow all of our dataset's variables to appear numeric and be run in PCA while preserving the distance between points. We center and scale each run and complete 4 analyses. Ideally this will inform us of a few variables that we can use to maintain the same prediction accuracy in certain models. The results are shown below. Results are displayed below.
+
+In the variance plots we notice how much in numerical terms the variation changes between PCA groups while the scree plots show the percentage of variance explained between those same groups. We also create contribution plots to show which variables contribute the most to the data, and bioplots to show their directional contribution (as high or low contribution ratings). These 4 methods should display a similar story but we make specific changes to notice the differences. Starting with all factor-type variables solely for PCA1 we run the algorithm. Then, we remove `capital_gain` and `capital_loss` variables. We repeat this on the full group of variables (numeric and factors) with and without these gain and loss variables since they skew the true results when trying to predict our target. 
 
 ```{r}
 nums <- income_data_clean %>% 
   dplyr::select(is.numeric)
-pca <- prcomp(nums)
-summary(pca)
-plot(pca, type = 'l', col = 'light blue')
-fviz_eig(pca)
-fviz_contrib(pca, choice = "var", axes = c(1,2), top = 15)
-fviz_pca_var(pca,
+pca1 <- prcomp(nums)
+summary(pca1)
+plot(pca1, type = 'l', col = 'light blue')
+fviz_eig(pca1)
+fviz_contrib(pca1, choice = "var", axes = c(1,2), top = 15)
+fviz_pca_var(pca1,
              col.var ="contrib", # Color by contributions to the PC
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
              repel = TRUE     # Avoid text overlapping
@@ -401,6 +404,7 @@ fviz_pca_var(pca4,
              )
 ```
 
+When we exclude the `capital_gain` and `capital_loss` variables, we find that the most important factors for explaining the variation in the data are the age of the individual, how many hours per week they work, and what their education level is. These factors are largely consistent with real-world expectations, even though we are aware the dataset is not necessarily representative of a larger population. These variables: `age`, `education_num`, and `hours_per_week` should be used if a reduction in the dimensions of the data is necessary for model development while maintaining accuracy.  
 
 
 ## Training and Test Partition
@@ -532,51 +536,6 @@ conf.mat.randomforest <- confusionMatrix(rf.predict, testing$income)
 
 Our random Forest model accuracy comes out as `r round(conf.mat.randomforest$overall[1], 4)` or roughly `r round(conf.mat.randomforest$overall[1], 2)*100)`%.. This is an improvement upon our decision model and the sensitivity did increase as we desired. However, there are some more strategies we can try with other models. 
 
-## K-means Clustering
-
-```{r}
-set.seed(622)
-mode <- function(x){
-  levels <- unique(x)
-  indicies <- tabulate(match(x, levels))
-  levels[which.max(indicies)]
-}
-# Clean up training data
-training_factors <- training %>% 
-  dplyr::select(is.factor)
-training_factors <- data.frame(lapply(training_factors, as.factor))
-train_knn <- training_factors %>% 
-  mutate(across(everything(), ~replace_na(., mode(.))))
-
-# Clean up testing data
-testing_factors <- testing %>% 
-  dplyr::select(is.factor)
-testing_factors <- data.frame(lapply(testing_factors, as.factor))
-test_knn <- testing_factors %>% 
-  mutate(across(everything(), ~replace_na(., mode(.))))
-
-# Determine number of k 
-ideal_k <- knnreg(income ~., data = train_knn)
-# Train KNN model
-train.knn <- (train_knn[, names(train_knn) != "income"])
-cl <- trainControl(method="repeatedcv", repeats = ideal_k$k) 
-knn_model <- knn3(income ~ ., data = train_knn, k = ideal_k$k, use.all = F)
-head(predict(knn_model, test_knn, type = "class"), n = 10)
-
-
-set.seed(622)
-train.knn <- training[, names(training) != "Direction"]
-prep <- preProcess(x = train.knn, method = c("center", "scale"))
-prep
-cl <- trainControl(method="repeatedcv", repeats = 3) 
-knn_model <- train(income ~ ., data = training, 
-                method = "knn", 
-                trControl = cl, 
-                preProcess = c("center","scale"), 
-                tuneLength = 20)
-knn_model 
-```
-
 
 #XGboost
 
@@ -665,10 +624,27 @@ conf.mat.xgboost <- confusionMatrix(table(XGB.predict, y_test))
 
 # Model Performance
 
-Include a table of results
+When evaluating how the models performed we focused on accuracy as our main metric. However, we also considered how the results might apply in real-world settings. This does slightly change the results of our model's performances depending on the circumstances in which the prediction is needed. For example, someone with the goal of identifying what factors they need to maximize to boost their income will have a fundamentally different set of variables, and thus results, than someone else with the goal of minimizing income loss for an individual. Nevertheless we compiled the results as follows: 
+
+```{r}
+results <- data.frame(matrix(names(conf.mat.xgboost$overall)))
+results$xgboost <- round(conf.mat.xgboost$overall, 3)
+results$decisiontree <- round(conf.mat.decisiontree$overall, 3)
+results$randomforest <- round(conf.mat.randomforest$overall, 3)
+
+results %>%
+  rename(statistic = matrix.names.conf.mat.xgboost.overall..) %>% 
+  kable()
+```
+
 
 # Conclusion
 
+Our conclusion could be given regardless of model performance and accuracy given the diversity of the dataset and its substantial drawbacks. Perhaps most importantly, we should note that this dataset was not representative of the global population and should not be applied too broadly. This dataset was heavily white, highly educated males who were married at least once in their lives. Many of these respondents also had no kids which evidence suggest can significantly shape an individual’s income over their lifetime. Typically, having kids increases income for males while it decreases for females. This makes our results less realistic and hard to interpret, especially for non-white females and other minority classes not represented in this dataset.  
+
+Additionally, responses from individuals located in the U.S. dominated the list, containing nearly 90% of the dataset’s individuals. This nullifies the results for other countries due to large clusters of outliers in their variables that could not be dealt with without comprising the integrity of the data. To reduce the errors inherent to the dataset, an extensive use of oversampling of the minority classes in a strategic manner would be necessary but unfortunately, there is no way to tell if the results would be reliable. For these reasons, we focus on the relationships between the variables which have greater reliability and certainty in this analysis. 
+
+Recall that our target variable, income, was split into two factor levels; those whose income is greater than \$50,000 and those who have an income less than or equal to \$50,000. As is, our XGBoosted model performed best with an accuracy between 82-87%. Our closest alternative model was the random forest. Excluding capital gain and losses, we found that age, education, and the hours worked per week, capture nearly perfectly the variance in the dataset. If we were to reduce the dimensions of the dataset these would be the best variables to use. This suggests that, aside from capital gains, the best ways to increase income to \$50,000 or greater in the United States is to get a higher education, work 40 or more hours per week and be older than your colleagues. These results are applicable across the United States. 
 
 
 # References
