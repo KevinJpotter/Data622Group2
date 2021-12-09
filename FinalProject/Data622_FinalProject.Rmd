@@ -429,6 +429,43 @@ With data prepared for modeling, we develop several models that we suspect would
 
 Our first model is a logistic regression model. This model will let us identify variables and factor levels that have significant influence over the target variable income. To do this we must first convert factors into dummy variables within the training and test sets. We utilize the caret package for its development. Results are shown. 
 
+
+```{r}
+logit.income <-  glm(income ~., data = training, family = "binomial")
+summary(logit.income)
+```
+
+
+```{r}
+logit.pred <- predict(logit.income, testing, type="response")
+testing$pred_glm <- ifelse(logit.pred > 0.5, "1", "0")
+testing$pred_glm <- as.factor(testing$pred_glm)
+testing$income <- as.factor(testing$income)
+conf.mat.logit <- confusionMatrix(testing$income, testing$pred_glm)
+conf.mat.logit
+```
+
+Our logistic regression model accuracy comes out as `r round(conf.mat.logit$overall[1], 4)` or roughly `r round(conf.mat.logit$overall[1], 2)*100`%. There is room for improvement in this model's sensitivity among other variables. By observation of the significance for each variables coefficient of the first logistic regression model, the county columns do no provide much, if any, significance. Next, we'll try to improve the overall performance of the model to remove the country as a variable.
+
+```{r}
+logit.income.nc <-  glm(income ~age + workclass + education_num + marital_status + occupation + 
+    relationship + race + sex + capital_gain + capital_loss + 
+    hours_per_week, data = training, family = "binomial")
+summary(logit.income.nc)
+```
+
+```{r}
+logit.pred.nc <- predict(logit.income.nc, testing, type="response")
+testing$pred_glm2 <- ifelse(logit.pred > 0.5, "1", "0")
+testing$pred_glm2 <- as.factor(testing$pred_glm2)
+testing$income <- as.factor(testing$income)
+conf.mat.logit.nc <- confusionMatrix(testing$income, testing$pred_glm2)
+conf.mat.logit.nc
+```
+
+
+Our logistic regression without countries model accuracy comes out as `r round(conf.mat.logit.nc$overall[1], 4)` or roughly `r round(conf.mat.logit.nc$overall[1], 2)*100`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this by adding the country variable back and creating dummy variables for the variables that are factors.
+
 ```{r}
 # https://www.marsja.se/create-dummy-variables-in-r/
 library(fastDummies)
@@ -455,15 +492,23 @@ testing.dum <- dummy_cols(testing,
                            remove_selected_columns = TRUE)
 # https://stats.idre.ucla.edu/r/dae/logit-regression/
 # https://www.datacamp.com/community/tutorials/logistic-regression-R
-
-logit.income <- glm(income ~., data = training.dum, family = "binomial")
-summary(logit.income)
-logit.probs <- predict(logit.income, type = "response")
-logit.probs[1:5]
-logit.pred <- ifelse(logit.probs > 0.5, "Up", "Down")
 ```
 
+```{r}
+logit.income.dum <- glm(income ~., data = training.dum, family = "binomial")
+summary(logit.income.dum)
+```
 
+```{r}
+logit.pred.dum <- predict(logit.income.dum, testing.dum, type="response")
+testing.dum$pred_glm <- ifelse(logit.pred.dum > 0.5, "1", "0")
+testing.dum$pred_glm <- as.factor(testing.dum$pred_glm)
+testing.dum$income <- as.factor(testing.dum$income)
+conf.mat.logit.dum <- confusionMatrix(testing.dum$income, testing.dum$pred_glm)
+conf.mat.logit.dum
+```
+
+Our logistic regression model with dummy variables accuracy comes out as `r round(conf.mat.logit$overall[1], 4)` or roughly `r round(conf.mat.logit$overall[1], 2)*100`%. We can see that this has not changed from the previous two models. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
 
 ## Decision Trees
 
@@ -473,16 +518,6 @@ In a decision tree model the data is split into distinct options of 'yes' or 'no
 # Check Number of Levels for each Factor
 training %>% map(levels) %>% map(length)
 ```
-
-```{r dt-model}
-# Decision Trees model
-# set.seed(622)
-# tree.income = tree(income~., data=training)
-# summary(tree.income)
-# plot(tree.income)
-# text(tree.income, pretty = 0)
-```
-
 
 ```{r Decision}
 # Decision Trees model
@@ -631,6 +666,7 @@ results <- data.frame(matrix(names(conf.mat.xgboost$overall)))
 results$xgboost <- round(conf.mat.xgboost$overall, 3)
 results$decisiontree <- round(conf.mat.decisiontree$overall, 3)
 results$randomforest <- round(conf.mat.randomforest$overall, 3)
+results$logit <- round(conf.mat.logit$overall, 3)
 
 results %>%
   rename(statistic = matrix.names.conf.mat.xgboost.overall..) %>% 
