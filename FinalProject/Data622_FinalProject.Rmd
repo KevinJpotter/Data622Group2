@@ -43,6 +43,7 @@ library(fastDummies)
 library(mlbench)
 library(xgboost)
 library(ParBayesianOptimization)
+library(factoextra)
 ```
 
 
@@ -329,6 +330,76 @@ income_data_tf$income <- plyr::mapvalues(income_data_tf$income, from = c('>50K',
 head(income_data_tf)
 ```
 
+## PCA and Factor Analysis
+
+
+```{r}
+nums <- income_data_clean %>% 
+  dplyr::select(is.numeric)
+pca <- prcomp(nums)
+summary(pca)
+plot(pca, type = 'l', col = 'light blue')
+fviz_eig(pca)
+fviz_contrib(pca, choice = "var", axes = c(1,2), top = 15)
+fviz_pca_var(pca,
+             col.var ="contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             ,axes=c(1,2)
+             )
+```
+
+
+```{r}
+# PCA with removal of capital_gains and losses
+nums2 <- income_data_clean %>% 
+  dplyr::select(is.numeric, -capital_gain, - capital_loss)
+pca2 <- prcomp(nums2)
+summary(pca2)
+fviz_eig(pca2)
+fviz_contrib(pca2, choice = "var", axes = c(1,2), top = 15)
+fviz_pca_var(pca2,
+             col.var ="contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             ,axes=c(1,2)
+             )
+```
+
+
+```{r}
+facs <- income_data_clean %>% 
+  dplyr::select(is.factor)
+facs_nums <- sapply(facs, as.numeric)
+dfnumeric <- cbind(facs_nums, nums)
+pca3 <- prcomp(dfnumeric)
+prcomp <- prcomp(dfnumeric, scale. = TRUE, center=TRUE)
+summary(pca3)
+fviz_eig(pca3)
+fviz_contrib(pca3, choice = "var", axes = c(1,2), top = 15)
+fviz_pca_var(pca3,
+             col.var ="contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             ,axes=c(1,2)
+             )
+```
+
+
+```{r}
+dfnumeric2 <- dfnumeric %>%
+  dplyr::select(-capital_gain, -capital_loss) 
+pca4 <- prcomp(dfnumeric2)
+summary(pca4)
+fviz_eig(pca4)
+fviz_contrib(pca4, choice = "var", axes = c(1,2), top = 15)
+fviz_pca_var(pca4,
+             col.var ="contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             ,axes=c(1,2)
+             )
+```
 
 
 
@@ -463,6 +534,48 @@ Our random Forest model accuracy comes out as `r round(conf.mat.randomforest$ove
 
 ## K-means Clustering
 
+```{r}
+set.seed(622)
+mode <- function(x){
+  levels <- unique(x)
+  indicies <- tabulate(match(x, levels))
+  levels[which.max(indicies)]
+}
+# Clean up training data
+training_factors <- training %>% 
+  dplyr::select(is.factor)
+training_factors <- data.frame(lapply(training_factors, as.factor))
+train_knn <- training_factors %>% 
+  mutate(across(everything(), ~replace_na(., mode(.))))
+
+# Clean up testing data
+testing_factors <- testing %>% 
+  dplyr::select(is.factor)
+testing_factors <- data.frame(lapply(testing_factors, as.factor))
+test_knn <- testing_factors %>% 
+  mutate(across(everything(), ~replace_na(., mode(.))))
+
+# Determine number of k 
+ideal_k <- knnreg(income ~., data = train_knn)
+# Train KNN model
+train.knn <- (train_knn[, names(train_knn) != "income"])
+cl <- trainControl(method="repeatedcv", repeats = ideal_k$k) 
+knn_model <- knn3(income ~ ., data = train_knn, k = ideal_k$k, use.all = F)
+head(predict(knn_model, test_knn, type = "class"), n = 10)
+
+
+set.seed(622)
+train.knn <- training[, names(training) != "Direction"]
+prep <- preProcess(x = train.knn, method = c("center", "scale"))
+prep
+cl <- trainControl(method="repeatedcv", repeats = 3) 
+knn_model <- train(income ~ ., data = training, 
+                method = "knn", 
+                trControl = cl, 
+                preProcess = c("center","scale"), 
+                tuneLength = 20)
+knn_model 
+```
 
 
 #XGboost
@@ -546,7 +659,7 @@ XGB.predict <- as.numeric(predict(XGB,X_test) > 0.5)
 importance_matrix <- xgb.importance(model = XGB)
 
 xgb.plot.importance(importance_matrix = importance_matrix)
-confusionMatrix(table(XGB.predict, y_test)) 
+conf.mat.xgboost <- confusionMatrix(table(XGB.predict, y_test))
 ```
 
 
