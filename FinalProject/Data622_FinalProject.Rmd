@@ -45,28 +45,19 @@ library(fastDummies)
 
 # Overview
 
+As income inequality grows throughout the world, understanding the relationships between an individuals income and the other factors in this study we can better identify and address the underlying causes for the inequalities. This study will analyze how 15 factors such as age, county, working class, sex, race, education and more influence our target variable, income from a diverse dataset of over 48,842 individuals. The goal of this analysis is to develop models that best predict income, so that these models can be used to make better decisions when considering income from occupations. 
 
-As income inequality grows throughout the world, understanding the relationships between an individuals income and the other factors in this study we can better identify and address the underlying causes. This study will analyze how 15 factors such as age, county, working class, sex, race, education and more influence our target variable, income from a diverse dataset of over 48,842 individuals. The goal of this analysis is to develop models that best predict income, so that these models can be used to make better decisions when considering income from occupations. 
-
-# Approach
-
-In this analysis we attempt to predict the income of individuals given a host of variables. For purposes of simplicity, our target income variable has been broken into two categories: greater than \$50,000 or less than or equal to \$50,000. Ideally, this will makes its prediction less prone to error since we are using a host of categorical variables. We then explore the relationships between our variables, make any necessary changes prior to modeling, develop several models, and evaluate them using confusions matricies. Our focus in this analysis, will be on identifying the variables that improve real-world accuracy. 
-
-The dataset for final project is from the UCI Machine Learning Repository. This dataset was donated by Ron Kohavi and Barry Becker. Extraction was done by Barry Becker from the 1994 Census database. A set of reasonably clean records was extracted using the following conditions: ((AAGE>16) && (AGI>100) && (AFNLWGT>1)&& (HRSWK>0)). Relevant paper is from Ron Kohavi, "Scaling Up the Accuracy of Naive-Bayes Classifiers: a Decision-Tree Hybrid", Proceedings of the Second International Conference on Knowledge Discovery and Data Mining, 1996. Prediction task is to determine whether a person makes over 50K a year.
-
+The dataset for this project is from the UCI Machine Learning Repository. This dataset was donated by Ron Kohavi and Barry Becker. Extraction was done by Barry Becker from the 1994 Census database. A set of reasonably clean records was extracted using the following conditions: ((AAGE>16) && (AGI>100) && (AFNLWGT>1)&& (HRSWK>0)). Relevant paper is from Ron Kohavi, "Scaling Up the Accuracy of Naive-Bayes Classifiers: a Decision-Tree Hybrid", Proceedings of the Second International Conference on Knowledge Discovery and Data Mining, 1996. Our relevant prediction task based on this peer-reviewed paper is to determine whether a person makes over 50K a year.
 
 # Approach
 
-For this final project, we begin with data exploration to understand the relationships our target variable ‘Income’ will have with our variables and the variables’ relationships to each other.  This allows us to determine the steps necessary to set up for model development. Once we have an understanding of these variables we use that knowledge to prepare the data. We handle missing values, subset, train and split the data 75/25 so that we may better extract information when modeling. Then, we build the models and predict with the testing dataset. 
-We focus on prediction accuracy when assessing the models but consider a host of performance statistics and real-world applications to determine which model is best. 
+In this analysis we attempt to predict the income of individuals given a host of variables. For purposes of simplicity, our target income variable has been broken into two categories: greater than \$50,000 or less than or equal to \$50,000. Ideally, this will makes its prediction less prone to error since we are using a host of categorical variables. We then explore the relationships between our variables, make any necessary changes prior to modeling, develop several models, and evaluate them using confusions matricies. Our focus in this analysis, will be on identifying the variables that improve real-world accuracy to best capture the full context of income interactions with our variables.
 
-
+We begin with data exploration to understand the relationships our target variable ‘Income’ will have with our variables and the variables’ relationships to each other. This allows us to determine the steps necessary to set up for model development. Once we have an understanding of these variables we use that knowledge to prepare the data. We handle missing values, subset, train and split the data 75/25 so that we may better extract information when modeling. Then, we build the models and predict with the testing dataset. We focus on prediction accuracy when assessing the models but consider a host of performance statistics and real-world applications to determine which model is best. 
 
 # Data Exploration
 
-
-In this section we begin exploring the data by creating a table with the variable names' and descriptions. There are 15 base variables of 48,842 individual observations. The table is shown below for reference. 
-
+In this section we begin exploring the data by creating a table with the variable names' and descriptions. We first identify the characteristics of the data to help with properly labeling and categorizing our factors. To better understand the data, we then summarize those characteristics and present them in the data summary section. Additional visualizations and correlations are created to discover any unseen patterns or potentially problematic areas prior to preparing the data. 
 
 ## Data Characteristics
 
@@ -123,39 +114,38 @@ Below is a summary of the census income dataset. For this process we have alread
 dfSummary(income_data, style = 'grid', graph.col = FALSE)
 ```
 
-At first glance, it appears none of the data are missing values now and each variables is a factor data type as we intended but we begin to notice a few issues. Certain variables contain a multitude of distinct levels and as such, are interpreted as numeric data types with statistics for mean, median, minima, maxima, standard deviation and interquartile ranges. For example in the variables `age`, `fnlwgt`, `capital_gains`, `capital_loss` and `hours_per_week` produce nearly 100+ levels each with `fnlwgt` having 28523 levels. We will need to decide if these are worth adjusting further to capture the full picture of the relationships between the variables and our target. 
 
-We consider a different summary method, which at its base function calculates those statistical parameters previously mentioned and counts the number of observations for each level as performed above. This should confirm our previous grid table results but we should also look for changes, if there are any. The results of this new summary method are shown. 
-
+At first glance, it appears none of the data are missing values now and each variables is a factor data type as we intended but we begin to notice a few issues. Certain variables contain a multitude of distinct levels and as such, are interpreted as numeric data types with statistics for mean, median, minima, maxima, standard deviation and interquartile ranges (IQR). For example in the variables `age`, `fnlwgt`, `capital_gains`, `capital_loss` and `hours_per_week` produce nearly 100+ levels each with `fnlwgt` having 28523 levels. We will need to decide if these are worth adjusting further to capture the full picture of the relationships between the variables and our target. 
 
 Following the Missing column, it seems none of the columns have missing values but Stats / Values value column shows the variables that have value as '?'. `workclass`, `occupation`, `native_country` columns have values as '?'. The proportion of values for several columns shows significant differences and skew. For example, 67% of this dataset contains males applicants based on observations of the `sex` variable and 85.5% of data points are white people given the `race` variable. Due to the disproportionate levels within the variables we should expect the data is not representative of a larger population unless that population happens to have similar proportions. 
 
 Our numeric variables `age`, `fnlwgt`, `capital_gain`, `capital_loss` show signs of skew through the differences in their mean and medians as well as their ranges. The lowest value of `fnlwgt` variable was 12285, while the highest was 1490400. A similar problem exists with variables `capital_gain` and `capital_loss.` 
 
-Below is the summary of income dataset.
+We consider a different summary method, which at its base function calculates those statistical parameters previously mentioned and counts the number of observations for each level as performed above. This should confirm our previous grid table results but we should also look for changes, if there are any. The results of this new summary method are shown. 
 
 ```{r summ}
 summary(income_data)
 ```
 
-With this method, our first results are confirmed. However, there appear to be few differences, if any, in these results. The only noticible change is to our target variable, income, where the previous function interpreted the values as factors without levels rather than a series of character strings as this new method did. This indicates we might not need to make any further changes to the data types or adjustments in the quantity of missing values or outliers. 
+With this method, our first results are confirmed. However, there appear to be few differences, if any, in these results. The only noticible change is to our target variable, income, where the previous function interpreted the values as factors without levels rather than a series of character strings as this new method did. This indicates we might not need to make any further changes to the data types or adjustments in the quantity of missing values (which might have included those with the '?' level within their factors) or outliers. 
 
-We take a closer look at our target variable to get a sense of what we are trying to predict. We also look for any inate imbalances within the target by spotting any unintentional bias towards a specific income level. This is achieved with a bar chart. 
-
-For exploratory purposes, we visualize the proportions to see just how skewed and disproportionate this dataset is. We include missing values as '?' to demonstrate their influence on the dataset as well. The chart below shows the distribution of all categorical variables, which includes the factors mentioned previously. 
+We take a closer look at our target variable to get a sense of what we are trying to predict. We also look for any inate imbalances within the target by spotting any additional unintentional biases towards a specific income level. We visualize the proportions for other factors as well to see just how skewed and disproportionate this dataset is. We include missing values as '?' to demonstrate their influence on the dataset as well. The chart below shows the distribution of all categorical variables, which includes the factors mentioned previously. 
 
 
 ```{r}
 income_data %>% 
   count(income) %>% 
-  ggplot(data=., aes(x=factor(income), y=n)) + 
+  ggplot(data=., aes(x=factor(income), y=n, fill = income)) + 
   geom_col() + 
   xlab("Income") + 
   ylab("Frequency") + 
   ggtitle("Frequency of Income") + 
-  theme_classic()
+  theme_classic() + 
+  theme(legend.position = "none")
+
 ```
 
+In this first bar chart we notice that there is almost triple the frequency of individuals with income less than or equal to \$50,000 than the frequency of those who are above. This could be problematic for predicting the minority class (those with >50k) but we also know from the literature that this is realistic. In the population of the world, there is a lot fewer people who have more wealth than those who have less of it. For this reason, we note the disproportionate share of income towards those under less than of equal to \$50,000 (<=50k) but leave it as is because this is an observation of real-world statistics. 
 
 
 ```{r, cat-bar, fig.length =30, fig.width=10}
@@ -178,10 +168,11 @@ income_factm <- melt(income_fact, measure.vars = cat_cols, variable.name = 'metr
 ggplot(income_factm, aes(x = value)) + 
   geom_bar(aes(fill = metric)) + 
   facet_wrap( ~ metric, nrow = 5L, scales = 'free') + coord_flip() + 
+  theme_classic() +
   theme(legend.position = "none")
 ```
 
-From this chart, it is very clear we have a dataset with mostly male, a long white race, and long private workclass. We see missing values in form of question mark (?) for variables `workclass`, `occupation`, `native_country`. The predictor variable Income has mostly <=50k value.
+From this chart, it is very clear we have a dataset with mostly males, that are white, and in a private working class. Individuals in this survey were also mostly married as noted by the `married_civ_spouse`, `married_af_spouse`, `seperated` and `widowed` frequencies above. To us, the only case in which marriage did not occur were those who were in the `never_married` category. It is not likely that this will help us predict income since it disproportionately favors those who have been married at least once at some point in their lives. We can clearly see this growing disproportionality in the relationship variable where most individuals are husbands who also did not have kids. We see missing values in form of question mark (?) for variables `workclass`, `occupation`, `native_country`. The predictor variable Income is also shown as mostly <=50k value so we know the results agree with the previous chart. Occupation seems to have no underlying patterns or skew but we should note that individuals in U.S. dominate the respondents list. This makes understanding differences between income relationships in countries quite difficult for our purposes. 
 
 We also generate histograms with the count of each observation to assess our numeric variable distributions. This will let us know more about the skewness, average values, and where potential outliers may be found for our numeric variables. The graph below shows their distributions.
 
@@ -189,8 +180,10 @@ We also generate histograms with the count of each observation to assess our num
 ```{r plot_num}
 plot_histogram(income_data, geom_histogram_args = list("fill" = "tomato4"))
 ```
+As expected, the number of hours per week spikes at about 40. This makes sense since most people in the U.S. tend to work about 40 hours per week and that is who is best represnted within this dataset. Unfortunately, an extremely small proportion of individuals reported `capital_gain` and `capital_loss` in this study. These reflect real-world trends but are likely not representative of true income cateogires above and below \$50,000. 
 
-The next set of graphs shows the income distribution against countries, workclass, education, sex and race. We see male has higher income in both the categories than female. White race income distribution is significantly large as compared to other races. Private workclass earns more than any other categories and United States has larget income in both the categories compare to all other countries.
+
+The next set of graphs shows the income distribution against `countries`, `workclass`, `education`, `sex` and `race`. We see male has higher income in both the categories than female. White race income distribution is significantly large as compared to other races. Private working classes earn more than any other categories and United States has largest income in both the categories compareds to all other countries. Another chart is shown below for details. 
 
 
 ```{r income-cntry}
@@ -199,18 +192,26 @@ ggplot(income_data, aes(x=native_country, fill=income)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+In addition to those trends we add that, many other countries with respondents have income less than or equal to \$50,000. Of the other countries, only Canada and India appear to have a significant proportion of people with greater than \$50,000 per year. The rest are either `?` or so small, they might as well be absent since they likely misrepresent the population of the country they are assigned to. There are no distributions similar to the scale, proportions, or magnitude of data captured for the United States which will effect our results. 
+
 ```{r inc-wc}
 ggplot(income_data, aes(x=workclass, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-```{rinc-ed}
+The private class dominates the proportion of respondents from this survey. If all other categories were stacked together, including those missing values labeled as `?` their values would barely cover half of the private working class individual's responses from this study. Because of this, it is also no surprise that the private working class holds the largest share of income in the category greater than \$50,000. But what about education?
+
+
+```{r inc-ed}
 ggplot(income_data, aes(x=education, fill=income)) + 
-  geom_bar() + 
+  geom_bar(stat = "count") + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+From this dataset, we see that education does have an impact of on earning potential. As years of education increase, the proportion of the population with income greater than \$50,000 increases. However, the issue with this dataset is that is does not match repeated findings from peer-reviewed literature. Due to the slight increases in the proportion of people with `>50k`, it seems to matter less if you have a graduate or professional degree (categorized as `Masters`, `Doctorate`, `Prof-school` in the chart), than if you simply graduate from high school. We know this to be partially the case, but the income of the population of people with graduate or professional degrees should be greater in all cases since it also delays earning income (while costing the individual to pursue the degree). 
+
+This could be because we have a disproportionate amount of individuals who responded with at least some college when compared to the populations in real-world scenarios. This disproportionality is evident in the sum of the population of respondents with any education at or greater than the category `some_college`. Add up those with some_college, an associates, bachelors degree, masters, doctorate, and professional degrees and we have a population greater than or equal to all of high-school graduates. In other words, roughly 50 - 75% of this population would have been to college. Based on census bureau data, this is not the case in the real-world. Estimates in peer-reviewed literature places the proportion who have been to college well below our lowest bound. It is important to recognize this subset of the population which responded to the survey. 
 
 ```{r inc-sex}
 ggplot(income_data, aes(x=sex, fill=income)) + 
@@ -218,6 +219,7 @@ ggplot(income_data, aes(x=sex, fill=income)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+This chart shows how males hold most of the income amoung individuals in this dataset. Unfortunately, females makeup a smaller proportion of the dataset. This could be the case in some countries but in the U.S. (which makes up the greater than 90% of the data), it is common for women to have occupations that should pay the equivalent of men for the same occupation. However this chart shows that if the counts of each bar were adjusted to the same height, females would have a smaller number of individuals counted with income >50k based on this dataset. There is clearly not an equal income distribution among the sexes presented in this dataset.  
 
 
 
@@ -226,6 +228,9 @@ ggplot(income_data, aes(x=race, fill=income)) +
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
+
+The majority of individual respondents were white and as such, their distribution covers most of the chart. From this we can see that white individuals with `>50k` contains the largest of all the proportions of income among the races. Based on this dataset, it appears that the races with lowest proportion of people who have income greater than \$50,000 are Black, American Indian Eskimos, or other minorities. This is consistent with conventional literature and it will also effect our results by making prediction of minority classes more difficult. 
+
 
 ## Correlations
 
@@ -240,17 +245,17 @@ corrplot::corrplot(cors, method="number")
 
 ```
 
-Given that our numeric features have correlation values near 0, they do not seem to be strongly correlated with our target. They also do not seem to have any correlation with one another so this is a factor that does not have to be dealt with. 
+Given that our numeric features have correlation values near 0, they do not seem to be strongly correlated with our target. They also do not seem to have any correlation with one another so this is a factor that does not have to be dealt with. Weaker correlations indicated little to no interactions with our target variable. 
 
 
 
 # Data Preparation
 
-Before this income data can be used as input in our machine learning models, it must be cleaned, formatted, and restructured — this is typically known as preprocessing. In this income dataset there are columns having values as '?'. During the data preparation process we will clean these values, transform skewed features and perform train and test split for models. This preprocessing can help us with the outcome and significantly increase model accuracy of almost all learning algorithms.
+Before this income data can be used as input in our machine learning models, it must be cleaned, formatted, and restructured — this is typically known as preprocessing. In this income dataset there are columns that have values listed as '?'. During the data preparation process we will clean these values, transform skewed features and perform train and test split for models. This preprocessing can help us with the outcome and significantly increase model accuracy of almost all our learning algorithms.
 
 ## Handling missing values
 
-To this stage it is clear that our dataset does have missing values that appear as '?'. In the next step we replace the ? with NA and then take all the complete cases only. We do see there are 3620 cases with values missing and needs to be left out. We finally get the dataset with 45222 rows and 15 columns. 
+To this stage it is clear that our dataset does have missing values that appear as '?'. In the next step we replace the ? with NA and then take all the complete cases only. We do see there are 3620 cases with values missing and needs to be left out. We finally get the dataset with 45222 rows and 15 columns. A plot of the remaining proportions of missing values is shown after this reduction in dimesions of the dataset. 
 
 ```{r}
 index <- income_data == "?"
@@ -262,6 +267,8 @@ is.na(income_data) <- index
 # plot missing values
 plot_missing(income_data)
 ```
+The only 3 variables that contained missing rows were `native_country`, `workclass`, and `occupation`. Each contains an acceptable amount of missing but these will not be highly weighted in our algorithms. We tally the number of incomplete cases present at this step. Show the reduction in dimensions of the dataset while maintaining the same number of variables. 
+
 
 ```{r na-rows}
 # finding NAs now in income_data
@@ -275,21 +282,20 @@ dim(income_data_clean)
 ```
 
 
+
+
 ```{r plot-clean-data}
 library(tidyr)
 df <- income_data_clean
 df %>% 
   dplyr::select_if(is.integer) %>% 
   gather(key, value) %>% 
-  ggplot(aes(key, value)) + geom_boxplot() # What is fnlwgt?
-df %>% 
-  dplyr::select_if(is.integer) %>% 
-  gather(key, value) %>% 
-  ggplot(aes(key, value)) + geom_boxplot(aes(fill = key)) + facet_wrap(~key, scales = "free") # Lots of outliers 
+  ggplot(aes(key, value)) + 
+  geom_boxplot(aes(fill = key)) + 
+  facet_wrap(~key, scales = "free") # Lots of outliers 
 ```
 
-
-The `fnlwgt` variable (i.e. final weight) is being removed since it has no predictive power and it is a feature to allocate similar weights to people with similar demographic characteristics. We are also removing variable `education` since it is just a label of `education_num` column.
+There are many outliers identified in the `hours_per_week`, `capital_gain`, `capital_loss` and `fnlwgt` variables. These are shown as points in grid of boxplots above. The `fnlwgt` variable (i.e. final weight) should be removed since it has no predictive power and it is a feature to allocate similar weights to people with similar demographic characteristics. We are also removing variable `education` since it is just a label of `education_num` column.
 
 ```{r rem-fnl-ed}
 # removing columns fnlwgt and education
