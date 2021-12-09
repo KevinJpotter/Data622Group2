@@ -3,9 +3,6 @@ title: "Data622 - Group2 - FinalProject"
 author: "Amit Kapoor"
 date: "11/26/2021"
 output:
-  pdf_document:
-    latex_engine: xelatex
-    toc: yes
   html_document:
     fig_width: 15
     highlight: pygments
@@ -13,6 +10,9 @@ output:
     theme: flatly
     toc: yes
     toc_float: yes
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
   always_allow_html: yes
 ---
 
@@ -28,10 +28,23 @@ library(summarytools)
 library(reshape2)
 library(ggplot2)
 library(DataExplorer)
+library(caret)
+library(tidyverse)
+library(DataExplorer)
+library(mice)
+library(MASS)
+library(e1071)
+library(tree)
+library(randomForest)
+library(corrplot)
+library(kableExtra)
+library(htmltools)
+library(fastDummies)
 ```
 
 
 # Overview
+
 
 As income inequality grows throughout the world, understanding the relationships between an individuals income and the other factors in this study we can better identify and address the underlying causes. This study will analyze how 15 factors such as age, county, working class, sex, race, education and more influence our target variable, income from a diverse dataset of over 48,842 individuals. The goal of this analysis is to develop models that best predict income, so that these models can be used to make better decisions when considering income from occupations. 
 
@@ -39,10 +52,26 @@ As income inequality grows throughout the world, understanding the relationships
 
 In this analysis we attempt to predict the income of individuals given a host of variables. For purposes of simplicity, our target income variable has been broken into two categories: greater than \$50,000 or less than or equal to \$50,000. Ideally, this will makes its prediction less prone to error since we are using a host of categorical variables. We then explore the relationships between our variables, make any necessary changes prior to modeling, develop several models, and evaluate them using confusions matricies. Our focus in this analysis, will be on identifying the variables that improve real-world accuracy. 
 
+The dataset for final project is from the UCI Machine Learning Repository. This dataset was donated by Ron Kohavi and Barry Becker. Extraction was done by Barry Becker from the 1994 Census database. A set of reasonably clean records was extracted using the following conditions: ((AAGE>16) && (AGI>100) && (AFNLWGT>1)&& (HRSWK>0)). Relevant paper is from Ron Kohavi, "Scaling Up the Accuracy of Naive-Bayes Classifiers: a Decision-Tree Hybrid", Proceedings of the Second International Conference on Knowledge Discovery and Data Mining, 1996. Prediction task is to determine whether a person makes over 50K a year.
+
+
+# Approach
+
+For this final project, we begin with data exploration to understand the relationships our target variable ‘Income’ will have with our variables and the variables’ relationships to each other.  This allows us to determine the steps necessary to set up for model development. Once we have an understanding of these variables we use that knowledge to prepare the data. We handle missing values, subset, train and split the data 75/25 so that we may better extract information when modeling. Then, we build the models and predict with the testing dataset. 
+We focus on prediction accuracy when assessing the models but consider a host of performance statistics and real-world applications to determine which model is best. 
+
+
 
 # Data Exploration
 
+
 In this section we begin exploring the data by creating a table with the variable names' and descriptions. There are 15 base variables of 48,842 individual observations. The table is shown below for reference. 
+
+
+## Data Characteristics
+
+There are 48842 observations of 15 variables. Each observation is for individual's income data with it's corresponding variables of interest. Below is the description of the variables of interest in the data set. 
+
 
 |VARIABLE NAME|DESCRIPTION|
 |--|----|
@@ -60,6 +89,7 @@ In this section we begin exploring the data by creating a table with the variabl
 |capital-loss|continuous|
 |hours-per-week|continuous|
 |native-country|United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands|
+|income|>50K, <=50K|
 
 We continue by identifying any potential sources of error in the analysis. This includes calculating the number of missing and outlier values for each variable, determining and assigning the proper methods to reduce missing and problematic data points. Due to the unique dataset, we determing and convert the variables to the proper data types. Here again, for simplicity and the most effective use of the data, all are converted to factors with multiple levels as intended by the orignial data contributer. A gridded table with frequencies of each factor's level, its identity, and the number of valid or missing data points are tabulated and presented below. 
 
@@ -78,10 +108,15 @@ income_data <- income_data %>%
          relationship=as.factor(relationship),
          race=as.factor(race),
          sex=as.factor(sex),
-         native_country=as.factor(native_country))
+         native_country=as.factor(native_country),
+         income=as.factor(income))
 
 ```
 
+
+## Data summary
+
+Below is a summary of the census income dataset. For this process we have already adjusted the data types to their proper forms. This summarizing function quantifies each variable in a manner consistent with their types. We notice the levels of each factor in the ‘Stats/Values’ column, the frequency of valid (non-missing) observations per level of our factors, and the quantity and percent missing alongside them. We review these statistics to identify any issues with each variable.
 
 
 ```{r}
@@ -93,13 +128,21 @@ At first glance, it appears none of the data are missing values now and each var
 We consider a different summary method, which at its base function calculates those statistical parameters previously mentioned and counts the number of observations for each level as performed above. This should confirm our previous grid table results but we should also look for changes, if there are any. The results of this new summary method are shown. 
 
 
-```{r}
+Following the Missing column, it seems none of the columns have missing values but Stats / Values value column shows the variables that have value as '?'. `workclass`, `occupation`, `native_country` columns have values as '?'. The proportion of values for several columns shows significant differences and skew. For example, 67% of this dataset contains males applicants based on observations of the `sex` variable and 85.5% of data points are white people given the `race` variable. Due to the disproportionate levels within the variables we should expect the data is not representative of a larger population unless that population happens to have similar proportions. 
+
+Our numeric variables `age`, `fnlwgt`, `capital_gain`, `capital_loss` show signs of skew through the differences in their mean and medians as well as their ranges. The lowest value of `fnlwgt` variable was 12285, while the highest was 1490400. A similar problem exists with variables `capital_gain` and `capital_loss.` 
+
+Below is the summary of income dataset.
+
+```{r summ}
 summary(income_data)
 ```
 
 With this method, our first results are confirmed. However, there appear to be few differences, if any, in these results. The only noticible change is to our target variable, income, where the previous function interpreted the values as factors without levels rather than a series of character strings as this new method did. This indicates we might not need to make any further changes to the data types or adjustments in the quantity of missing values or outliers. 
 
 We take a closer look at our target variable to get a sense of what we are trying to predict. We also look for any inate imbalances within the target by spotting any unintentional bias towards a specific income level. This is achieved with a bar chart. 
+
+For exploratory purposes, we visualize the proportions to see just how skewed and disproportionate this dataset is. We include missing values as '?' to demonstrate their influence on the dataset as well. The chart below shows the distribution of all categorical variables, which includes the factors mentioned previously. 
 
 
 ```{r}
@@ -138,33 +181,38 @@ ggplot(income_factm, aes(x = value)) +
   theme(legend.position = "none")
 ```
 
+From this chart, it is very clear we have a dataset with mostly male, a long white race, and long private workclass. We see missing values in form of question mark (?) for variables `workclass`, `occupation`, `native_country`. The predictor variable Income has mostly <=50k value.
+
+We also generate histograms with the count of each observation to assess our numeric variable distributions. This will let us know more about the skewness, average values, and where potential outliers may be found for our numeric variables. The graph below shows their distributions.
+
 
 ```{r plot_num}
 plot_histogram(income_data, geom_histogram_args = list("fill" = "tomato4"))
 ```
 
+The next set of graphs shows the income distribution against countries, workclass, education, sex and race. We see male has higher income in both the categories than female. White race income distribution is significantly large as compared to other races. Private workclass earns more than any other categories and United States has larget income in both the categories compare to all other countries.
 
 
-```{r}
+```{r income-cntry}
 ggplot(income_data, aes(x=native_country, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-```{r}
+```{r inc-wc}
 ggplot(income_data, aes(x=workclass, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-```{r}
+```{rinc-ed}
 ggplot(income_data, aes(x=education, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
 
-```{r}
+```{r inc-sex}
 ggplot(income_data, aes(x=sex, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -173,41 +221,61 @@ ggplot(income_data, aes(x=sex, fill=income)) +
 
 
 
-```{r}
+```{r inc-race}
 ggplot(income_data, aes(x=race, fill=income)) + 
   geom_bar() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+## Correlations
+
+To determine how well each variable is correlated with our target variable and with one another, we construct a correlation plot. This plot contains the values of all correlation between variables represented by colors and numbers. The lighter the color, the lower the correlation. Meanwhile, darker blue indicates stronger positive correlations while darker red indicates stronger negative correlations.
+
+```{r corr}
+cors <- income_data %>% 
+  select_if(is.numeric) %>% 
+  na.omit() %>%
+  cor()
+corrplot::corrplot(cors, method="number")
+
+```
+
+Given that our numeric features have correlation values near 0, they do not seem to be strongly correlated with our target. They also do not seem to have any correlation with one another so this is a factor that does not have to be dealt with. 
 
 
 
 # Data Preparation
 
+Before this income data can be used as input in our machine learning models, it must be cleaned, formatted, and restructured — this is typically known as preprocessing. In this income dataset there are columns having values as '?'. During the data preparation process we will clean these values, transform skewed features and perform train and test split for models. This preprocessing can help us with the outcome and significantly increase model accuracy of almost all learning algorithms.
 
+## Handling missing values
 
-
+To this stage it is clear that our dataset does have missing values that appear as '?'. In the next step we replace the ? with NA and then take all the complete cases only. We do see there are 3620 cases with values missing and needs to be left out. We finally get the dataset with 45222 rows and 15 columns. 
 
 ```{r}
-index <- income_data == " ?"
+index <- income_data == "?"
 is.na(income_data) <- index
 ```
 
 
+```{r miss-plot}
+# plot missing values
+plot_missing(income_data)
+```
 
-```{r}
+```{r na-rows}
 # finding NAs now in income_data
 sum(!complete.cases(income_data))
 ```
 
 
-```{r}
+```{r clean-inc}
 income_data_clean <- income_data[complete.cases(income_data),]
 dim(income_data_clean)
 ```
 
 
-```{r}
+```{r plot-clean-data}
 library(tidyr)
 df <- income_data_clean
 df %>% 
@@ -221,21 +289,186 @@ df %>%
 ```
 
 
+The `fnlwgt` variable (i.e. final weight) is being removed since it has no predictive power and it is a feature to allocate similar weights to people with similar demographic characteristics. We are also removing variable `education` since it is just a label of `education_num` column.
 
+```{r rem-fnl-ed}
+# removing columns fnlwgt and education
+income_data_clean <- income_data_clean %>% 
+  dplyr::select(-c(fnlwgt, education))
+```
 
-
-
-
-## Handling missing values
 
 ## Preprocess using transformation
 
+For highly-skewed feature distributions, we will perform boxcox transformation for these column to reduce the skewness and make it more Gaussian. Also combining the center and scale transforms will standardize the data. Now the features will have a mean value of 0 and a standard deviation of 1. This preprocessing uses the caret package's 'preprocessing' function to return a box cox transformation on all numeric variables in our income dataset. These numeric variables include age, education_num, capital_gain, capital_loss and hours_per_week.  
+
+
+```{r preproc}
+set.seed(622)
+
+# Center and scaling for numeric features
+income_data_tf <- income_data_clean %>% 
+  dplyr::select(c("age", "education_num" , "capital_gain", "capital_loss","hours_per_week")) %>%
+  preProcess(method = c("BoxCox", "center","scale")) %>% 
+  predict(income_data_clean)
+
+head(income_data_tf)
+```
+
+
+
+```{r final-inc-data}
+income_data_tf$income <- plyr::mapvalues(income_data_tf$income, from = c('>50K','<=50K'), to = c(1,0))
+head(income_data_tf)
+```
+
+
+
+
 ## Training and Test Partition
+
+In this step for data preparation we will partition the training dataset in training and validation sets using `createDataPartition` method from `caret` package. We will reserve 70% for training and rest 30% for validation purpose.
+
+```{r partition}
+set.seed(622)
+partition <- createDataPartition(income_data_tf$income, p=0.70, list = FALSE)
+
+training <- income_data_tf[partition,]
+testing <- income_data_tf[-partition,]
+
+```
 
 
 # Build Models
 
 Decide on the models we should use and share the workload.
+
+## Logistic Regression
+
+First we're prepping the data to convert factors into dummy variables within the training and test sets.
+
+```{r}
+# https://www.marsja.se/create-dummy-variables-in-r/
+library(fastDummies)
+set.seed(622)
+training.dum <- dummy_cols(training, 
+                           select_columns = c("workclass",
+                                              "marital_status",
+                                              "occupation", 
+                                              "relationship", 
+                                              "race", 
+                                              "sex", 
+                                              "native_country"),
+                           remove_selected_columns = TRUE)
+```
+
+```{r}
+set.seed(622)
+testing.dum <- dummy_cols(testing, 
+                           select_columns = c("workclass",
+                                              "marital_status",
+                                              "occupation", 
+                                              "relationship", 
+                                              "race", 
+                                              "sex", 
+                                              "native_country"),
+                           remove_selected_columns = TRUE)
+```
+
+
+```{r}
+# https://stats.idre.ucla.edu/r/dae/logit-regression/
+# https://www.datacamp.com/community/tutorials/logistic-regression-R
+
+logit.income <- glm(income ~., data = training.dum, family = "binomial")
+summary(logit.income)
+```
+
+```{r}
+logit.probs <- predict(logit.income, type = "response")
+logit.probs[1:5]
+```
+
+```{r}
+logit.pred <- ifelse(logit.probs > 0.5, "Up", "Down")
+```
+
+
+
+## Decision Trees
+
+In a decision tree model the data is split into distinct options of 'yes' or 'no' based on parameters that make the options possible. These splits are called nodes and the decisions made at them can be mapped. For example, we provide a small decision tree that shows how decisions can be made based on credit history, coapplicant income, and property area.
+
+```{r}
+# Check Number of Levels for each Factor
+training %>% map(levels) %>% map(length)
+```
+
+```{r dt-model}
+# Decision Trees model
+#set.seed(622)
+#tree.income = tree(income~., data=training)
+#summary(tree.income)
+#plot(tree.income)
+#text(tree.income, pretty = 0)
+```
+
+We also review which variables are most important for making decisions in our model.These are shown in the plot as a straight line extending from the axis to the length of its importance to the model. Accuracy was also used to select the optimal model using the largest value where our final tree depth  used for this model is 1. 
+
+
+```{r Decision}
+# Decision Trees model
+#set.seed(622)
+#control <- trainControl(method="repeatedcv", number=10, repeats=3, search='grid')
+#metric <- "Accuracy"
+#tunegrid <- expand.grid(.maxdepth=c(1:15))
+#tree.income <- train(income~., data = training, method="rpart2", tuneGrid=tunegrid, trControl=control)
+#print(tree.income)
+#plot(tree.income)
+
+#treeImp <- varImp(tree.income, scale = FALSE)
+#plot(treeImp, top = 10)
+```
+
+```{r dt-pred}
+# prediction from decision tree model
+#tree.predict <- predict(tree.income, testing,type='raw')
+#mean(tree.predict == testing$income) # accuracy
+#conf.mat.decisiontree <- confusionMatrix(tree.predict, testing$income)
+#conf.mat.decisiontree
+```
+
+Our decision Tree model accuracy comes out as ~81%. As shown in the confusion matrix, there is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
+
+## Random Forests
+
+A random forest model works by building a number of decision trees and selecting the most accurate decisions from the trees. These decisions are randomized and in our case, tries 3 variables at each node or split in the tree. We set our number of trees to 500 and train the model to predict loan status. We review the variables of most importance in the model and in this case, give the model a boost to improve accuracy. 
+
+```{r rf}
+set.seed(622)
+# Random Forest model
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")
+metric <- "Accuracy"
+tunegrid <- expand.grid(.mtry=c(1:15))
+rf.income <- train(income~., data = training, method="rf",tuneGrid=tunegrid, trControl=control)
+print(rf.income)
+plot(rf.income)
+
+rfImp <- varImp(rf.income, scale = FALSE)
+plot(rfImp, top = 10)
+```
+
+```{r rf-pred}
+# prediction from random forest model
+rf.predict <- predict(rf.loans, testing,type='raw')
+mean(rf.predict == testing$Loan_Status) # accuracy
+conf.mat.randomforest <- confusionMatrix(rf.predict, testing$income)
+conf.mat.randomforest
+```
+
+Our random Forest model accuracy comes out as ~82%. This is an improvement upon our decision model and the sensitivity did increase as we desired. 
+
+
 
 # Model Performance
 
