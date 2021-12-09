@@ -40,6 +40,9 @@ library(corrplot)
 library(kableExtra)
 library(htmltools)
 library(fastDummies)
+library(mlbench)
+library(xgboost)
+library(ParBayesianOptimization)
 ```
 
 
@@ -295,7 +298,7 @@ df %>%
   facet_wrap(~key, scales = "free") # Lots of outliers 
 ```
 
-There are many outliers identified in the `hours_per_week`, `capital_gain`, `capital_loss` and `fnlwgt` variables. These are shown as points in grid of boxplots above. The `fnlwgt` variable (i.e. final weight) should be removed since it has no predictive power and it is a feature to allocate similar weights to people with similar demographic characteristics. We are also removing variable `education` since it is just a label of `education_num` column.
+There are many outliers identified in the `hours_per_week`, `capital_gain`, `capital_loss` and `fnlwgt` variables. These are shown as points in grid of boxplots above. The `fnlwgt` variable (i.e. final weight) should be removed since it has no predictive power and it is a feature to allocate similar weights to people with similar demographic characteristics. We are also removing variable `education` since it is just a label of `education_num` column. This will reduce our variables to 13 and our dimensions by 2. 
 
 ```{r rem-fnl-ed}
 # removing columns fnlwgt and education
@@ -306,7 +309,7 @@ income_data_clean <- income_data_clean %>%
 
 ## Preprocess using transformation
 
-For highly-skewed feature distributions, we will perform boxcox transformation for these column to reduce the skewness and make it more Gaussian. Also combining the center and scale transforms will standardize the data. Now the features will have a mean value of 0 and a standard deviation of 1. This preprocessing uses the caret package's 'preprocessing' function to return a box cox transformation on all numeric variables in our income dataset. These numeric variables include age, education_num, capital_gain, capital_loss and hours_per_week.  
+For highly-skewed feature distributions, we perform boxcox transformation for selected disproportionate columns to reduce the skewness and make it more Gaussian. Also combining the center and scale transforms standardizes the data. Now, the features will have a mean value of 0 and a standard deviation of 1. This preprocessing uses the caret package's 'preprocessing' function to return a box cox transformation on all numeric variables in our income dataset. These numeric variables include `age`, `education_num`, `capital_gain`, `capital_loss` and `hours_per_week`. A sample of the first few rows after this transformation are shown. 
 
 
 ```{r preproc}
@@ -317,8 +320,6 @@ income_data_tf <- income_data_clean %>%
   dplyr::select(c("age", "education_num" , "capital_gain", "capital_loss","hours_per_week")) %>%
   preProcess(method = c("BoxCox", "center","scale")) %>% 
   predict(income_data_clean)
-
-head(income_data_tf)
 ```
 
 
@@ -333,25 +334,25 @@ head(income_data_tf)
 
 ## Training and Test Partition
 
-In this step for data preparation we will partition the training dataset in training and validation sets using `createDataPartition` method from `caret` package. We will reserve 70% for training and rest 30% for validation purpose.
+In this step for data preparation we will partition the training dataset into training and validation sets using the `createDataPartition` method from the `caret` package. We will reserve 70% for training and rest 30% for validation purpose. The dimensions of our training dataset become 31656 observations of our 13 selected variables. We place the remaining 13566 observations of individuals aside to assess our models performances. 
 
 ```{r partition}
 set.seed(622)
 partition <- createDataPartition(income_data_tf$income, p=0.70, list = FALSE)
-
 training <- income_data_tf[partition,]
 testing <- income_data_tf[-partition,]
-
 ```
+
+
 
 
 # Build Models
 
-Decide on the models we should use and share the workload.
+With data prepared for modeling, we develop several models that we suspect would have the best chances of improving our prediction of the binary income target. This includes logisitc regression, decision trees, a random forest model, clustering techniques and more. We use the same data set for each without further transformations or reversion to keep the results simplistic. We begin in this section, tabulating the accuracy of each model to build additional models that add to the strengths and cover the weakness (and error prone) portions of certain models. Those results are then compiled in the model performance section. 
 
 ## Logistic Regression
 
-First we're prepping the data to convert factors into dummy variables within the training and test sets.
+Our first model is a logistic regression model. This model will let us identify variables and factor levels that have significant influence over the target variable income. To do this we must first convert factors into dummy variables within the training and test sets. We utilize the caret package for its development. Results are shown. 
 
 ```{r}
 # https://www.marsja.se/create-dummy-variables-in-r/
@@ -366,9 +367,7 @@ training.dum <- dummy_cols(training,
                                               "sex", 
                                               "native_country"),
                            remove_selected_columns = TRUE)
-```
 
-```{r}
 set.seed(622)
 testing.dum <- dummy_cols(testing, 
                            select_columns = c("workclass",
@@ -379,23 +378,13 @@ testing.dum <- dummy_cols(testing,
                                               "sex", 
                                               "native_country"),
                            remove_selected_columns = TRUE)
-```
-
-
-```{r}
 # https://stats.idre.ucla.edu/r/dae/logit-regression/
 # https://www.datacamp.com/community/tutorials/logistic-regression-R
 
 logit.income <- glm(income ~., data = training.dum, family = "binomial")
 summary(logit.income)
-```
-
-```{r}
 logit.probs <- predict(logit.income, type = "response")
 logit.probs[1:5]
-```
-
-```{r}
 logit.pred <- ifelse(logit.probs > 0.5, "Up", "Down")
 ```
 
@@ -403,48 +392,50 @@ logit.pred <- ifelse(logit.probs > 0.5, "Up", "Down")
 
 ## Decision Trees
 
-In a decision tree model the data is split into distinct options of 'yes' or 'no' based on parameters that make the options possible. These splits are called nodes and the decisions made at them can be mapped. For example, we provide a small decision tree that shows how decisions can be made based on credit history, coapplicant income, and property area.
+In a decision tree model the data is split into distinct options of 'yes' or 'no' based on parameters that make the options possible. These splits are called nodes and the decisions made at them can be mapped. We follow this principle to identify decisions that would result in the most predictive accuracy for our income target variable. The results are shown. 
 
-```{r}
+```{r include = F}
 # Check Number of Levels for each Factor
 training %>% map(levels) %>% map(length)
 ```
 
 ```{r dt-model}
 # Decision Trees model
-#set.seed(622)
-#tree.income = tree(income~., data=training)
-#summary(tree.income)
-#plot(tree.income)
-#text(tree.income, pretty = 0)
+# set.seed(622)
+# tree.income = tree(income~., data=training)
+# summary(tree.income)
+# plot(tree.income)
+# text(tree.income, pretty = 0)
 ```
-
-We also review which variables are most important for making decisions in our model.These are shown in the plot as a straight line extending from the axis to the length of its importance to the model. Accuracy was also used to select the optimal model using the largest value where our final tree depth  used for this model is 1. 
 
 
 ```{r Decision}
 # Decision Trees model
-#set.seed(622)
-#control <- trainControl(method="repeatedcv", number=10, repeats=3, search='grid')
-#metric <- "Accuracy"
-#tunegrid <- expand.grid(.maxdepth=c(1:15))
-#tree.income <- train(income~., data = training, method="rpart2", tuneGrid=tunegrid, trControl=control)
-#print(tree.income)
-#plot(tree.income)
+set.seed(622)
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search='grid')
+metric <- "Accuracy"
+tunegrid <- expand.grid(.maxdepth=c(1:15))
+tree.income <- train(income~., data = training, method="rpart2", tuneGrid=tunegrid, trControl=control)
+print(tree.income)
+plot(tree.income)
+```
 
-#treeImp <- varImp(tree.income, scale = FALSE)
-#plot(treeImp, top = 10)
+We also review which variables are most important for making decisions in our model.These are shown in the plot as a straight line extending from the axis to the length of its importance to the model. Accuracy was also used to select the optimal model using the largest value where our final tree depth  used for this model is 1. 
+
+```{r}
+treeImp <- varImp(tree.income, scale = FALSE)
+plot(treeImp, top = 10)
 ```
 
 ```{r dt-pred}
 # prediction from decision tree model
-#tree.predict <- predict(tree.income, testing,type='raw')
-#mean(tree.predict == testing$income) # accuracy
-#conf.mat.decisiontree <- confusionMatrix(tree.predict, testing$income)
-#conf.mat.decisiontree
+tree.predict <- predict(tree.income, testing,type='raw')
+mean(tree.predict == testing$income) # accuracy
+conf.mat.decisiontree <- confusionMatrix(tree.predict, testing$income)
 ```
 
-Our decision Tree model accuracy comes out as ~81%. As shown in the confusion matrix, there is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
+Our decision Tree model accuracy comes out as `r round(conf.mat.decisiontree$overall[1], 4)` or roughly `r round(conf.mat.decisiontree$overall[1], 2)*100)`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
+
 
 ## Random Forests
 
@@ -469,10 +460,13 @@ plot(rfImp, top = 10)
 rf.predict <- predict(rf.loans, testing,type='raw')
 mean(rf.predict == testing$Loan_Status) # accuracy
 conf.mat.randomforest <- confusionMatrix(rf.predict, testing$income)
-conf.mat.randomforest
 ```
 
-Our random Forest model accuracy comes out as ~82%. This is an improvement upon our decision model and the sensitivity did increase as we desired. 
+Our random Forest model accuracy comes out as `r round(conf.mat.randomforest$overall[1], 4)` or roughly `r round(conf.mat.randomforest$overall[1], 2)*100)`%.. This is an improvement upon our decision model and the sensitivity did increase as we desired. However, there are some more strategies we can try with other models. 
+
+## K-means Clustering
+
+
 
 
 
