@@ -517,6 +517,7 @@ In a decision tree model the data is split into distinct options of 'yes' or 'no
 ```{r include = F}
 # Check Number of Levels for each Factor
 training %>% map(levels) %>% map(length)
+testing %>% map(levels) %>% map(length)
 ```
 
 ```{r Decision}
@@ -578,7 +579,7 @@ Our random Forest model accuracy comes out as `r round(conf.mat.randomforest$ove
 y_train <- as.matrix(training$income)
 y_test <- as.numeric(as.matrix(testing$income))
 X_train <- sapply(subset(training, select = -income), as.numeric)
-X_test <- sapply(subset(testing, select = -income), as.numeric)
+X_test <- sapply(subset(testing, select = -c(income, pred_glm, pred_glm2)), as.numeric)
 ```
 
 
@@ -654,6 +655,7 @@ importance_matrix <- xgb.importance(model = XGB)
 
 xgb.plot.importance(importance_matrix = importance_matrix)
 conf.mat.xgboost <- confusionMatrix(table(XGB.predict, y_test))
+print(conf.mat.xgboost)
 ```
 
 
