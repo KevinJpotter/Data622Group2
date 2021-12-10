@@ -543,9 +543,11 @@ plot(treeImp, top = 10)
 tree.predict <- predict(tree.income, testing,type='raw')
 mean(tree.predict == testing$income) # accuracy
 conf.mat.decisiontree <- confusionMatrix(tree.predict, testing$income)
+var1 <- round(conf.mat.decisiontree$overall[1], 4)
+var2 <- (round(conf.mat.decisiontree$overall[1], 2)*100)
 ```
 
-Our decision Tree model accuracy comes out as `r round(conf.mat.decisiontree$overall[1], 4)` or roughly `r round(conf.mat.decisiontree$overall[1], 2)*100)`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
+Our decision Tree model accuracy comes out as `r var1` or roughly `r var2`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
 
 
 ## Random Forests
