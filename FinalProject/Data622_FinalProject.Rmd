@@ -1,8 +1,11 @@
 ---
 title: "Data622 - Group2 - FinalProject"
-author: "Amit Kapoor"
+author: "Adam Gersowitz, Amit Kapoor, Kevin Potter, Zachary Palmore, Paul Perez"
 date: "11/26/2021"
 output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
   html_document:
     fig_width: 15
     highlight: pygments
@@ -10,9 +13,6 @@ output:
     theme: flatly
     toc: yes
     toc_float: yes
-  pdf_document:
-    latex_engine: xelatex
-    toc: yes
   always_allow_html: yes
 ---
 
@@ -547,7 +547,11 @@ var1 <- round(conf.mat.decisiontree$overall[1], 4)
 var2 <- (round(conf.mat.decisiontree$overall[1], 2)*100)
 ```
 
+<<<<<<< Updated upstream
 Our decision Tree model accuracy comes out as `r var1` or roughly `r var2`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
+=======
+Our decision Tree model accuracy comes out as `r round(conf.mat.decisiontree$overall[1], 4)` or roughly `r round(conf.mat.decisiontree$overall[1], 2)*100`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
+>>>>>>> Stashed changes
 
 
 ## Random Forests
@@ -572,7 +576,7 @@ mean(rf.predict == testing$Loan_Status) # accuracy
 conf.mat.randomforest <- confusionMatrix(rf.predict, testing$income)
 ```
 
-Our random Forest model accuracy comes out as `r round(conf.mat.randomforest$overall[1], 4)` or roughly `r round(conf.mat.randomforest$overall[1], 2)*100)`%.. This is an improvement upon our decision model and the sensitivity did increase as we desired. However, there are some more strategies we can try with other models. 
+Our random Forest model accuracy comes out as `r round(conf.mat.randomforest$overall[1], 4)` or roughly `r round(conf.mat.randomforest$overall[1], 2)*100`%.. This is an improvement upon our decision model and the sensitivity did increase as we desired. However, there are some more strategies we can try with other models. 
 
 
 #XGboost
