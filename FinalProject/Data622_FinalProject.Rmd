@@ -89,7 +89,7 @@ There are 48842 observations of 15 variables. Each observation is for individual
 We continue by identifying any potential sources of error in the analysis. This includes calculating the number of missing and outlier values for each variable, determining and assigning the proper methods to reduce missing and problematic data points. Due to the unique dataset, we determing and convert the variables to the proper data types. Here again, for simplicity and the most effective use of the data, all are converted to factors with multiple levels as intended by the orignial data contributer. A gridded table with frequencies of each factor's level, its identity, and the number of valid or missing data points are tabulated and presented below. 
 
 
-```{r}
+```{r inc-data}
 income_data <- read.csv("https://raw.githubusercontent.com/amit-kapoor/Data622Group2/main/FinalProject/data/census_income.csv", 
                         check.names = FALSE) %>% 
   na_if("")
@@ -114,7 +114,7 @@ income_data <- income_data %>%
 Below is a summary of the census income dataset. For this process we have already adjusted the data types to their proper forms. This summarizing function quantifies each variable in a manner consistent with their types. We notice the levels of each factor in the ‘Stats/Values’ column, the frequency of valid (non-missing) observations per level of our factors, and the quantity and percent missing alongside them. We review these statistics to identify any issues with each variable.
 
 
-```{r}
+```{r inc-summ}
 dfSummary(income_data, style = 'grid', graph.col = FALSE)
 ```
 
@@ -136,7 +136,7 @@ With this method, our first results are confirmed. However, there appear to be f
 We take a closer look at our target variable to get a sense of what we are trying to predict. We also look for any inate imbalances within the target by spotting any additional unintentional biases towards a specific income level. We visualize the proportions for other factors as well to see just how skewed and disproportionate this dataset is. We include missing values as '?' to demonstrate their influence on the dataset as well. The chart below shows the distribution of all categorical variables, which includes the factors mentioned previously. 
 
 
-```{r}
+```{r plot1}
 income_data %>% 
   count(income) %>% 
   ggplot(data=., aes(x=factor(income), y=n, fill = income)) + 
@@ -261,7 +261,7 @@ Before this income data can be used as input in our machine learning models, it 
 
 To this stage it is clear that our dataset does have missing values that appear as '?'. In the next step we replace the ? with NA and then take all the complete cases only. We do see there are 3620 cases with values missing and needs to be left out. We finally get the dataset with 45222 rows and 15 columns. A plot of the remaining proportions of missing values is shown after this reduction in dimesions of the dataset. 
 
-```{r}
+```{r rep-ques}
 index <- income_data == "?"
 is.na(income_data) <- index
 ```
@@ -336,7 +336,7 @@ In this section we try to find those variables which could be used to reduce the
 
 In the variance plots we notice how much in numerical terms the variation changes between PCA groups while the scree plots show the percentage of variance explained between those same groups. We also create contribution plots to show which variables contribute the most to the data, and bioplots to show their directional contribution (as high or low contribution ratings). These 4 methods should display a similar story but we make specific changes to notice the differences. Starting with all factor-type variables solely for PCA1 we run the algorithm. Then, we remove `capital_gain` and `capital_loss` variables. We repeat this on the full group of variables (numeric and factors) with and without these gain and loss variables since they skew the true results when trying to predict our target. 
 
-```{r}
+```{r pca1}
 nums <- income_data_clean %>% 
   dplyr::select(is.numeric)
 pca1 <- prcomp(nums)
@@ -353,7 +353,7 @@ fviz_pca_var(pca1,
 ```
 
 
-```{r}
+```{r pca2}
 # PCA with removal of capital_gains and losses
 nums2 <- income_data_clean %>% 
   dplyr::select(is.numeric, -capital_gain, - capital_loss)
@@ -370,7 +370,7 @@ fviz_pca_var(pca2,
 ```
 
 
-```{r}
+```{r pca3}
 facs <- income_data_clean %>% 
   dplyr::select(is.factor)
 facs_nums <- sapply(facs, as.numeric)
@@ -389,7 +389,7 @@ fviz_pca_var(pca3,
 ```
 
 
-```{r}
+```{r pca4}
 dfnumeric2 <- dfnumeric %>%
   dplyr::select(-capital_gain, -capital_loss) 
 pca4 <- prcomp(dfnumeric2)
@@ -430,13 +430,13 @@ With data prepared for modeling, we develop several models that we suspect would
 Our first model is a logistic regression model. This model will let us identify variables and factor levels that have significant influence over the target variable income. To do this we must first convert factors into dummy variables within the training and test sets. We utilize the caret package for its development. Results are shown. 
 
 
-```{r}
+```{r glm-summ}
 logit.income <-  glm(income ~., data = training, family = "binomial")
 summary(logit.income)
 ```
 
 
-```{r}
+```{r glm-pred}
 logit.pred <- predict(logit.income, testing, type="response")
 testing$pred_glm <- ifelse(logit.pred > 0.5, "1", "0")
 testing$pred_glm <- as.factor(testing$pred_glm)
@@ -447,14 +447,14 @@ conf.mat.logit
 
 Our logistic regression model accuracy comes out as `r round(conf.mat.logit$overall[1], 4)` or roughly `r round(conf.mat.logit$overall[1], 2)*100`%. There is room for improvement in this model's sensitivity among other variables. By observation of the significance for each variables coefficient of the first logistic regression model, the county columns do no provide much, if any, significance. Next, we'll try to improve the overall performance of the model to remove the country as a variable.
 
-```{r}
+```{r glm2}
 logit.income.nc <-  glm(income ~age + workclass + education_num + marital_status + occupation + 
     relationship + race + sex + capital_gain + capital_loss + 
     hours_per_week, data = training, family = "binomial")
 summary(logit.income.nc)
 ```
 
-```{r}
+```{r glm2-pred}
 logit.pred.nc <- predict(logit.income.nc, testing, type="response")
 testing$pred_glm2 <- ifelse(logit.pred > 0.5, "1", "0")
 testing$pred_glm2 <- as.factor(testing$pred_glm2)
@@ -466,8 +466,8 @@ conf.mat.logit.nc
 
 Our logistic regression without countries model accuracy comes out as `r round(conf.mat.logit.nc$overall[1], 4)` or roughly `r round(conf.mat.logit.nc$overall[1], 2)*100`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this by adding the country variable back and creating dummy variables for the variables that are factors.
 
-```{r}
-# https://www.marsja.se/create-dummy-variables-in-r/
+```{r dumm-vars}
+
 library(fastDummies)
 set.seed(622)
 training.dum <- dummy_cols(training, 
@@ -490,16 +490,15 @@ testing.dum <- dummy_cols(testing,
                                               "sex", 
                                               "native_country"),
                            remove_selected_columns = TRUE)
-# https://stats.idre.ucla.edu/r/dae/logit-regression/
-# https://www.datacamp.com/community/tutorials/logistic-regression-R
+
 ```
 
-```{r}
+```{r glm-summ2}
 logit.income.dum <- glm(income ~., data = training.dum, family = "binomial")
 summary(logit.income.dum)
 ```
 
-```{r}
+```{r glm-pred2}
 logit.pred.dum <- predict(logit.income.dum, testing.dum, type="response")
 testing.dum$pred_glm <- ifelse(logit.pred.dum > 0.5, "1", "0")
 testing.dum$pred_glm <- as.factor(testing.dum$pred_glm)
@@ -533,7 +532,7 @@ plot(tree.income)
 
 We also review which variables are most important for making decisions in our model.These are shown in the plot as a straight line extending from the axis to the length of its importance to the model. Accuracy was also used to select the optimal model using the largest value where our final tree depth  used for this model is 1. 
 
-```{r}
+```{r varimp}
 treeImp <- varImp(tree.income, scale = FALSE)
 plot(treeImp, top = 10)
 ```
@@ -547,11 +546,8 @@ var1 <- round(conf.mat.decisiontree$overall[1], 4)
 var2 <- (round(conf.mat.decisiontree$overall[1], 2)*100)
 ```
 
-<<<<<<< Updated upstream
+
 Our decision Tree model accuracy comes out as `r var1` or roughly `r var2`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
-=======
-Our decision Tree model accuracy comes out as `r round(conf.mat.decisiontree$overall[1], 4)` or roughly `r round(conf.mat.decisiontree$overall[1], 2)*100`%. There is room for improvement in this model's sensitivity among other variables. We try to improve this with the random forest model. 
->>>>>>> Stashed changes
 
 
 ## Random Forests
@@ -581,7 +577,7 @@ Our random Forest model accuracy comes out as `r round(conf.mat.randomforest$ove
 
 #XGboost
 
-```{r}
+```{r xgb-testtrain}
 y_train <- as.matrix(training$income)
 y_test <- as.numeric(as.matrix(testing$income))
 X_train <- sapply(subset(training, select = -income), as.numeric)
@@ -643,9 +639,9 @@ print(getBestPars(optObj))
 
 ```
 
-Some text
 
-```{r}
+
+```{r xgb}
 dt <- xgb.DMatrix(X_train, label=y_train)
 XGB <- xgboost(data = dt
     , nround = 100
@@ -669,7 +665,7 @@ print(conf.mat.xgboost)
 
 When evaluating how the models performed we focused on accuracy as our main metric. However, we also considered how the results might apply in real-world settings. This does slightly change the results of our model's performances depending on the circumstances in which the prediction is needed. For example, someone with the goal of identifying what factors they need to maximize to boost their income will have a fundamentally different set of variables, and thus results, than someone else with the goal of minimizing income loss for an individual. Nevertheless we compiled the results as follows: 
 
-```{r}
+```{r res}
 results <- data.frame(matrix(names(conf.mat.xgboost$overall)))
 results$xgboost <- round(conf.mat.xgboost$overall, 3)
 results$decisiontree <- round(conf.mat.decisiontree$overall, 3)
@@ -694,7 +690,9 @@ Recall that our target variable, income, was split into two factor levels; those
 # References
 
 https://archive.ics.uci.edu/ml/datasets/Census+Income
-
+https://stats.idre.ucla.edu/r/dae/logit-regression/
+https://www.datacamp.com/community/tutorials/logistic-regression-R
+https://www.marsja.se/create-dummy-variables-in-r/
 
 
 
